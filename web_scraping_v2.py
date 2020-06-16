@@ -34,10 +34,6 @@ current_headers = next(headers_pool)
 # START SCRAPING
 soup = BeautifulSoup(r.content, 'html.parser')
 
-#print(soup.prettify())
-# scores_teams = soup.find_all(class_=["full_table", "team_name"])
-# scores_wins = soup.find_all(class_=["full_table", 'data-stat'], id_="wins")
-# scores_losses = soup.find_all(class_=["full_table", "team_name"])
 
 # scores = soup.find_all(class_="full_table")
 #
