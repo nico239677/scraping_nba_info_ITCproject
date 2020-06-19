@@ -3,14 +3,18 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 # Links
-link = 'https://www.basketball-reference.com/'
-r = requests.get(link)
-soup = BeautifulSoup(r.content, 'lxml')
+def read_link(link):
+    r = requests.get(link)
+    soup = BeautifulSoup(r.content, 'lxml')
+    return soup
+
+main_link = 'https://www.basketball-reference.com/'
 
 # Get global stats
 print("\nRESULTS OF THE YEAR SO FAR")
 
-score_file = soup.find("div", attrs={'class': "data_grid section_wrapper"})
+main = read_link(main_link)
+score_file = main.find("div", attrs={'class': "data_grid section_wrapper"})
 table_list = score_file.find_all('div', attrs={'class': "table_wrapper"})
 
 for table in table_list:
@@ -18,7 +22,6 @@ for table in table_list:
     break
 scores = []
 for row in all_rows:
-    print('row is ', row)
     print(row.a['title'] if row.a['title'] else "N/A", ' : ',
           row.td.nextSibling.nextSibling.text if row.td.nextSibling.nextSibling.text else "N/A", ' wins, ',
           row.td.nextSibling.nextSibling.nextSibling.text if row.td.nextSibling.nextSibling.nextSibling.text else "N/A", 'losses')
@@ -33,7 +36,7 @@ scores_df.to_csv('scores.csv')
 
 
 print('\n\n LAST SCORES\n')
-scores = soup.find('div', attrs={'class': 'game_summaries'})
+scores = main.find('div', attrs={'class': 'game_summaries'})
 games = scores.find_all('table', attrs={'class': 'teams'})
 last_games = []
 for game in games:
@@ -54,7 +57,7 @@ last_games_df.to_csv('last_games.csv')
 
 
 print('\n\nCURRENT TRENDING PLAYERS\n')
-news = soup.find('div', attrs={'id': 'current'})
+news = main.find('div', attrs={'id': 'current'})
 trending_players = news.find('div').nextSibling.find_all("a")
 for player in trending_players:
     print(player.text)
@@ -72,15 +75,15 @@ YEAR = 2019
 
 print('LIST OF ALL DRAFTS FOR YEAR ', YEAR)
 
-link_draft = 'https://www.basketball-reference.com/draft/NBA_' + str(YEAR) + '.html'
-r2 = requests.get(link_draft)
+link_draft = main_link + 'draft/NBA_' + str(YEAR) + '.html'
 
-soup = BeautifulSoup(r2.content, 'lxml')
-draft_table = soup.find("div", attrs={'class': "table_outer_container"})
+draft = read_link(link_draft)
+
+draft_table = draft.find("div", attrs={'class': "table_outer_container"})
 body = draft_table.find("tbody")
 print(body)
 for row in body:
-    print(row.find("a").nextSibling)
+    print(row.find("a"))
 
 # for row in body:
 #     print(row)
