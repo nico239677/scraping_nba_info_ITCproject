@@ -2,15 +2,80 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-# Links
+
 def read_link(link):
     r = requests.get(link)
     soup = BeautifulSoup(r.content, 'lxml')
     return soup
 
+
 main_link = 'https://www.basketball-reference.com/'
 
-# Get global stats
+
+# Getting the data of all drafts for a specific period of time
+FIRST_YEAR = 2015
+LAST_YEAR = 2019
+
+for year in range(FIRST_YEAR, LAST_YEAR):
+    print('LIST OF ALL DRAFTS FOR YEAR ', year)
+
+    link_draft = main_link + 'draft/NBA_' + str(year) + '.html'
+
+    draft = read_link(link_draft)
+
+    draft_table = draft.find(class_="overthrow table_container")
+    body = draft_table.find("tbody").find_all("td")
+
+    draft_list = []
+    for draft in body:
+        if 'play-index' in str(draft.find('a')):
+            index = draft.find('a').text if draft.find('a').text else "NaN"
+            # print(index, end=" ")
+            draft_list.append(index)
+        if 'players' in str(draft.find('a')):
+            name_player = draft.find('a').text if draft.find('a').text else "NaN"
+            # print(name_player, end=" ")
+            draft_list.append(name_player)
+        if 'data-stat="g"' in str(draft):
+            number_games = draft.text if draft.text else 'NaN'
+            # print('| number of games: ', number_games, end=" ")
+            draft_list.append(number_games)
+        if 'data-stat="mp_per_g"' in str(draft):
+            minutes_played_per_game = draft.text if draft.text else 'NaN'
+            # print('| minutes played per game: ', minutes_played_per_game, end=" ")
+            draft_list.append(minutes_played_per_game)
+        if 'data-stat="pts_per_g"' in str(draft):
+            points_per_game = draft.text if draft.text else 'NaN'
+        #     # print('| points per games: ', points_per_game, end=" ")
+            draft_list.append(points_per_game)
+        if 'data-stat="trb_per_g"' in str(draft):
+            rebounds_per_game = draft.text if draft.text else 'NaN'
+        #     # print('| rebounds per games: ', rebounds_per_game, end=" ")
+            draft_list.append(rebounds_per_game)
+        if 'data-stat="ast_per_g"' in str(draft):
+            assists_per_game = draft.text if draft.text else 'NaN'
+        #     # print('| assists per game: ', assists_per_game)
+            draft_list.append(assists_per_game)
+
+    # Turning the list into list of lists
+    updated_draft_list = [draft_list[x:x+7] for x in range(0, len(draft_list), 7)]
+    name = 'list_draft_' + str(year) + '.csv'
+
+    # Storing the data in dataframes and exporting it to CSV
+    draft_df = pd.DataFrame(updated_draft_list, columns=['number_draft',
+                                                         'name',
+                                                         'number_of_games',
+                                                         'minutes_per_game',
+                                                         'points_per_game',
+                                                         'rebounds_per_game',
+                                                         'assists_per_game'
+                                                         ''])
+    print(draft_df)
+    draft_df.to_csv(name)
+
+print('\n\n\n----------\n\n\n')
+
+# Get global stats from main page
 print("\nRESULTS OF THE YEAR SO FAR")
 
 main = read_link(main_link)
@@ -68,60 +133,5 @@ rumors = news.find('div').nextSibling.nextSibling.nextSibling.find_all('li')
 for rumor in rumors:
     print(rumor.text, 'available at the link: ', rumor.a['href'])
 
-print('\n\n\n----------\n\n\n')
 
-# Getting the data of all drafts for a specific year
-YEAR = 2019
 
-print('LIST OF ALL DRAFTS FOR YEAR ', YEAR)
-
-link_draft = main_link + 'draft/NBA_' + str(YEAR) + '.html'
-
-draft = read_link(link_draft)
-
-draft_table = draft.find(class_="overthrow table_container")
-body = draft_table.find("tbody").find_all("td")
-
-draft_list = []
-for draft in body:
-    if 'play-index' in str(draft.find('a')):
-        index = draft.find('a').text if draft.find('a').text else "NaN"
-        # print(index, end=" ")
-        draft_list.append(index)
-    if 'players' in str(draft.find('a')):
-        name_player = draft.find('a').text if draft.find('a').text else "NaN"
-        # print(name_player, end=" ")
-        draft_list.append(name_player)
-    if 'data-stat="g"' in str(draft):
-        number_games = draft.text if draft.text else 'NaN'
-        # print('| number of games: ', number_games, end=" ")
-        draft_list.append(number_games)
-    if 'data-stat="mp_per_g"' in str(draft):
-        minutes_played_per_game = draft.text if draft.text else 'NaN'
-        # print('| minutes played per game: ', minutes_played_per_game, end=" ")
-        draft_list.append(minutes_played_per_game)
-    if 'data-stat="pts_per_g"' in str(draft):
-        points_per_game = draft.text if draft.text else 'NaN'
-    #     # print('| points per games: ', points_per_game, end=" ")
-        draft_list.append(points_per_game)
-    if 'data-stat="trb_per_g"' in str(draft):
-        rebounds_per_game = draft.text if draft.text else 'NaN'
-    #     # print('| rebounds per games: ', rebounds_per_game, end=" ")
-        draft_list.append(rebounds_per_game)
-    if 'data-stat="ast_per_g"' in str(draft):
-        assists_per_game = draft.text if draft.text else 'NaN'
-    #     # print('| assists per game: ', assists_per_game)
-        draft_list.append(assists_per_game)
-
-updated_draft_list = [draft_list[x:x+7] for x in range(0, len(draft_list), 7)]
-name = 'list_draft_' + str(YEAR) + '.csv'
-draft_df = pd.DataFrame(updated_draft_list, columns=['number_draft',
-                                                     'name',
-                                                     'number_of_games',
-                                                     'minutes_per_game',
-                                                     'points_per_game',
-                                                     'rebounds_per_game',
-                                                     'assists_per_game'
-                                                     ''])
-print(draft_df)
-draft_df.to_csv(name)
