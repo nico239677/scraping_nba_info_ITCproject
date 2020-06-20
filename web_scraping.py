@@ -79,22 +79,49 @@ link_draft = main_link + 'draft/NBA_' + str(YEAR) + '.html'
 
 draft = read_link(link_draft)
 
-draft_table = draft.find("div", attrs={'class': "table_outer_container"})
-body = draft_table.find("tbody")
-print(body)
-for row in body:
-    print(row.find("a"))
+draft_table = draft.find(class_="overthrow table_container")
+body = draft_table.find("tbody").find_all("td")
 
-# for row in body:
-#     print(row)
-#     name_player = all_rows.find_all('td', attrs={'class': 'left'})
-# print('name player is ', name_player)
-    #print(row.td.nextSibling.nextSibling.text)
-    #tbody.td.nextSibling.nextSibling.a.text)
-#print(all_rows)
-# for row in all_rows:
-#     print(row)
-# print(draft_table)
-# draft_file_df = pd.DataFrame(draft_table)
-# name_file = 'draft_year_' + str(YEAR) + '.csv'
-# draft_file_df.to_csv(name_file)
+draft_list = []
+for draft in body:
+    if 'play-index' in str(draft.find('a')):
+        index = draft.find('a').text if draft.find('a').text else "NaN"
+        # print(index, end=" ")
+        draft_list.append(index)
+    if 'players' in str(draft.find('a')):
+        name_player = draft.find('a').text if draft.find('a').text else "NaN"
+        # print(name_player, end=" ")
+        draft_list.append(name_player)
+    if 'data-stat="g"' in str(draft):
+        number_games = draft.text if draft.text else 'NaN'
+        # print('| number of games: ', number_games, end=" ")
+        draft_list.append(number_games)
+    if 'data-stat="mp_per_g"' in str(draft):
+        minutes_played_per_game = draft.text if draft.text else 'NaN'
+        # print('| minutes played per game: ', minutes_played_per_game, end=" ")
+        draft_list.append(minutes_played_per_game)
+    if 'data-stat="pts_per_g"' in str(draft):
+        points_per_game = draft.text if draft.text else 'NaN'
+    #     # print('| points per games: ', points_per_game, end=" ")
+        draft_list.append(points_per_game)
+    if 'data-stat="trb_per_g"' in str(draft):
+        rebounds_per_game = draft.text if draft.text else 'NaN'
+    #     # print('| rebounds per games: ', rebounds_per_game, end=" ")
+        draft_list.append(rebounds_per_game)
+    if 'data-stat="ast_per_g"' in str(draft):
+        assists_per_game = draft.text if draft.text else 'NaN'
+    #     # print('| assists per game: ', assists_per_game)
+        draft_list.append(assists_per_game)
+
+updated_draft_list = [draft_list[x:x+7] for x in range(0, len(draft_list), 7)]
+name = 'list_draft_' + str(YEAR) + '.csv'
+draft_df = pd.DataFrame(updated_draft_list, columns=['number_draft',
+                                                     'name',
+                                                     'number_of_games',
+                                                     'minutes_per_game',
+                                                     'points_per_game',
+                                                     'rebounds_per_game',
+                                                     'assists_per_game'
+                                                     ''])
+print(draft_df)
+draft_df.to_csv(name)
