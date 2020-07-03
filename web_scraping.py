@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 
-def read_link(link):
+def read_linzk(link):
     r = requests.get(link)
     soup = BeautifulSoup(r.content, 'lxml')
     return soup
@@ -13,8 +13,8 @@ main_link = 'https://www.basketball-reference.com/'
 
 
 # Getting the data of all drafts for a specific period of time
-FIRST_YEAR = 2015
-LAST_YEAR = 2019
+FIRST_YEAR = 2000
+LAST_YEAR = 2005
 
 for year in range(FIRST_YEAR, LAST_YEAR):
     print('LIST OF ALL DRAFTS FOR YEAR ', year)
@@ -40,6 +40,22 @@ for year in range(FIRST_YEAR, LAST_YEAR):
             number_games = draft.text if draft.text else 'NaN'
             # print('| number of games: ', number_games, end=" ")
             draft_list.append(number_games)
+        if 'data-stat="mp"' in str(draft):
+            minutes_played = draft.text if draft.text else 'NaN'
+        #     # print('| total minutes played: ', minutes_played)
+            draft_list.append(minutes_played)
+        if 'data-stat="pts"' in str(draft):
+            points = draft.text if draft.text else 'NaN'
+        #     # print('| assists per game: ', assists_per_game)
+            draft_list.append(points)
+        if 'data-stat="trb"' in str(draft):
+            rebounds = draft.text if draft.text else 'NaN'
+        #     # print('| assists per game: ', assists_per_game)
+            draft_list.append(rebounds)
+        if 'data-stat="ast"' in str(draft):
+            assists = draft.text if draft.text else 'NaN'
+        #     # print('| assists per game: ', assists_per_game)
+            draft_list.append(assists)
         if 'data-stat="mp_per_g"' in str(draft):
             minutes_played_per_game = draft.text if draft.text else 'NaN'
             # print('| minutes played per game: ', minutes_played_per_game, end=" ")
@@ -58,13 +74,17 @@ for year in range(FIRST_YEAR, LAST_YEAR):
             draft_list.append(assists_per_game)
 
     # Turning the list into list of lists
-    updated_draft_list = [draft_list[x:x+7] for x in range(0, len(draft_list), 7)]
+    updated_draft_list = [draft_list[x:x+11] for x in range(0, len(draft_list), 11)]
     name = 'list_draft_' + str(year) + '.csv'
 
     # Storing the data in dataframes and exporting it to CSV
     draft_df = pd.DataFrame(updated_draft_list, columns=['number_draft',
                                                          'name',
                                                          'number_of_games',
+                                                         'total_minutes_played',
+                                                         'total_points',
+                                                         'total_rebounds',
+                                                         'total_assists',
                                                          'minutes_per_game',
                                                          'points_per_game',
                                                          'rebounds_per_game',
