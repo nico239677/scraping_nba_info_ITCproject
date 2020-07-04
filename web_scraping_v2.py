@@ -7,32 +7,30 @@ today = datetime.today()
 import click
 
 
+def read_link(link):
+    """Reads link to manipulate it with BeautifulSoup"""
+    # Handles error if link is incorrect
+    try:
+        r = requests.get(link)
+    except requests.exceptions.ConnectionError:
+        print('URL not valid')
+        sys.exit()
+    soup = BeautifulSoup(r.content, 'lxml')
+    return soup
+
 @click.command()
 @click.option('--FIRST_YEAR', default=2010)
-def start(start_year):
-    click.echo(start_year)
-
 @click.option('--END_YEAR', default=2020)
-def end(end_year):
-    click.echo(end_year)
+def end(FIRST_YEAR, END_YEAR):
+    click.echo(FIRST_YEAR, END_YEAR)
 #@click.option('--team', default=today.year)
 
 
-    FIRST_YEAR = start()
-    LAST_YEAR = end()
+    # FIRST_YEAR = start()
+    # END_YEAR = end()
     print('FIRST YEAR IS', FIRST_YEAR)
     #print('START_UYEAR:', START_YEAR)
-    
-    def read_link(link):
-        """Reads link to manipulate it with BeautifulSoup"""
-        # Handles error if link is incorrect
-        try:
-            r = requests.get(link)
-        except requests.exceptions.ConnectionError:
-            print('URL not valid')
-            sys.exit()
-        soup = BeautifulSoup(r.content, 'lxml')
-        return soup
+
     
     
     main_link = 'https://www.basketball-reference.com/'

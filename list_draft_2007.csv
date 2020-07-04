@@ -1,0 +1,61 @@
+,number_draft,name,number_of_games,total_minutes_played,total_points,total_rebounds,total_assists,minutes_per_game,points_per_game,rebounds_per_game,assists_per_game
+0,1,Greg Oden,105,2028,840,656,51,19.3,8.0,6.2,0.5
+1,2,Kevin Durant,849,31305,22940,5992,3486,36.9,27.0,7.1,4.1
+2,3,Al Horford,846,27633,11814,7009,2792,32.7,14.0,8.3,3.3
+3,4,Mike Conley,829,26871,12300,2460,4687,32.4,14.8,3.0,5.7
+4,5,Jeff Green,900,26573,11657,3988,1403,29.5,13.0,4.4,1.6
+5,6,Yi Jianlian,272,6038,2148,1339,192,22.2,7.9,4.9,0.7
+6,7,Corey Brewer,814,18738,7092,2279,1248,23.0,8.7,2.8,1.5
+7,8,Brandan Wright,428,6949,2976,1560,199,16.2,7.0,3.6,0.5
+8,9,Joakim Noah,667,18596,5867,6042,1900,27.9,8.8,9.1,2.8
+9,10,Spencer Hawes,684,15541,5932,3893,1271,22.7,8.7,5.7,1.9
+10,11,Acie Law,188,2385,725,195,309,12.7,3.9,1.0,1.6
+11,12,Thaddeus Young,965,29281,12703,5714,1607,30.3,13.2,5.9,1.7
+12,13,Julian Wright,231,3049,907,531,182,13.2,3.9,2.3,0.8
+13,14,Al Thornton,296,8274,3527,1233,353,28.0,11.9,4.2,1.2
+14,15,Rodney Stuckey,651,17890,8185,1912,2333,27.5,12.6,2.9,3.6
+15,16,Nick Young,720,16419,8194,1427,687,22.8,11.4,2.0,1.0
+16,17,Sean Williams,137,1978,581,472,47,14.4,4.2,3.4,0.3
+17,18,Marco Belinelli,855,19444,8310,1760,1424,22.7,9.7,2.1,1.7
+18,19,Javaris Crittenton,113,1853,595,276,201,16.4,5.3,2.4,1.8
+19,20,Jason Smith,616,10029,3777,2075,453,16.3,6.1,3.4,0.7
+20,21,Daequan Cook,328,5993,2114,703,243,18.3,6.4,2.1,0.7
+21,22,Jared Dudley,887,19983,6617,2819,1380,22.5,7.5,3.2,1.6
+22,23,Wilson Chandler,676,20287,8463,3574,1205,30.0,12.5,5.3,1.8
+23,24,Rudy Fernández,249,5965,2254,608,554,24.0,9.1,2.4,2.2
+24,25,Morris Almond,38,361,119,46,12,9.5,3.1,1.2,0.3
+25,26,Aaron Brooks,645,13439,6259,1079,1925,20.8,9.7,1.7,3.0
+26,27,Arron Afflalo,762,20829,8198,2176,1386,27.3,10.8,2.9,1.8
+27,28,Tiago Splitter,355,6812,2816,1779,423,19.2,7.9,5.0,1.2
+28,29,Alando Tucker,51,426,211,49,16,8.4,4.1,1.0,0.3
+29,30,Petteri Koponen,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+30,31,Carl Landry,513,11524,5541,2533,355,22.5,10.8,4.9,0.7
+31,32,Gabe Pruitt,62,461,125,51,52,7.4,2.0,0.8,0.8
+32,33,Marcus Williams,13,39,14,12,3,3.0,1.1,0.9,0.2
+33,34,Nick Fazekas,26,269,107,89,11,10.3,4.1,3.4,0.4
+34,35,Glen Davis,514,10865,4111,2236,457,21.1,8.0,4.4,0.9
+35,36,Jermareo Davidson,52,433,162,96,14,8.3,3.1,1.8,0.3
+36,37,Josh McRoberts,433,8271,2333,1686,901,19.1,5.4,3.9,2.1
+37,38,Kyrylo Fesenko,135,1107,305,269,40,8.2,2.3,2.0,0.3
+38,39,Stanko Barać,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+39,40,Sun Yue,10,28,6,0,2,2.8,0.6,0.0,0.2
+40,41,Chris Richard,70,780,135,194,25,11.1,1.9,2.8,0.4
+41,42,Derrick Byars,2,37,10,11,1,18.5,5.0,5.5,0.5
+42,43,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,44
+43,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,45,NaN
+44,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,46,Stéphane Lasme,16
+45,303,83,53,3,18.9,5.2,3.3,0.2,47,Dominic McGuire,342
+46,5348,939,1169,422,15.6,2.7,3.4,1.2,48,Marc Gasol,831
+47,27555,12196,6342,2864,33.2,14.7,7.6,3.4,49,Aaron Gray,318
+48,3851,1066,1190,207,12.1,3.4,3.7,0.7,50,Renaldas Seibutis,NaN
+49,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,51,JamesOn Curry,1
+50,0,0,0,0,0.0,0.0,0.0,0.0,52,Taurean Green,17
+51,74,27,10,11,4.4,1.6,0.6,0.6,53,Demetris Nichols,18
+52,58,22,7,2,3.2,1.2,0.4,0.1,54,Brad Newley,NaN
+53,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,55,NaN,NaN
+54,NaN,NaN,NaN,NaN,NaN,NaN,NaN,56,Ramon Sessions,691,16119
+55,7141,1840,2807,23.3,10.3,2.7,4.1,57,NaN,NaN,NaN
+56,NaN,NaN,NaN,NaN,NaN,NaN,58,Georgios Printezis,NaN,NaN,NaN
+57,NaN,NaN,NaN,NaN,NaN,NaN,59,D.J. Strawberry,33,270,73
+58,28,30,8.2,2.2,0.8,0.9,60,Milovan Raković,NaN,NaN,NaN
+59,NaN,NaN,NaN,NaN,NaN,NaN,,,,,
