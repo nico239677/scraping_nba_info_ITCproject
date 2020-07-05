@@ -20,7 +20,7 @@ parser.add_argument('-first',
 parser.add_argument('-last',
                     '--end_year',
                     type=int,
-                    default=datetime.today(),
+                    default=datetime.today().year-1,
                     help='choose last year of data to scrap')
 args = parser.parse_args()
 
@@ -38,10 +38,10 @@ def read_link(link):
     return soup
 
 
-def add_tag_link_and_year(global_list, string, year):
+def add_tag_link_and_year(global_list, string, year_draft):
     if string in str(draft.find('a')):
         element = draft.find('a').text if draft.find('a').text else None
-        global_list.append(year)
+        global_list.append(year_draft)
         global_list.append(element)
         return
 
@@ -56,7 +56,6 @@ def add_tag_link(global_list, string):
 def add_tag_text_in_tag(global_list, string):
     if string in str(draft):
         element = draft.text if draft.text else None
-        # print('| number of games: ', number_games, end=" ")
         global_list.append(element)
 
 
@@ -85,27 +84,31 @@ for year in range(FIRST_YEAR, LAST_YEAR+1):
 
     draft_list = []
     for draft in body:
-        # Adding year
         # Adding player info
-        # draft_list.append('2018')
-        # print('step entre  year et index')
         add_tag_link_and_year(draft_list, 'play-index', year)
-        # print(add_tag_link(draft_list, 'play-index'))
-        # print('step entre  index et player')
-        add_tag_link(draft_list, 'players')
-        # print(add_tag_link(draft_list, 'players'))
+
+        # add_tag_link(draft_list, 'players')
+        if 'players' in str(draft.find('a')):
+            element = draft.find('a').text
+            draft_list.append(element)
+            #if draft.find('a').text
+        elif 'data-stat="player"' in str(draft):
+            element = draft.text
+            draft_list.append(element)
+
         add_tag_text_in_tag(draft_list, 'data-stat="g"')
         add_tag_text_in_tag(draft_list, 'data-stat="mp"')
         add_tag_text_in_tag(draft_list, 'data-stat="pts"')
-
         add_tag_text_in_tag(draft_list, 'data-stat="trb"')
         add_tag_text_in_tag(draft_list, 'data-stat="ast"')
+
         add_tag_text_in_tag(draft_list, 'data-stat="mp_per_g"')
         add_tag_text_in_tag(draft_list, 'data-stat="pts_per_g"')
         add_tag_text_in_tag(draft_list, 'data-stat="trb_per_g"')
         add_tag_text_in_tag(draft_list, 'data-stat="ast_per_g"')
 
-    print('draft_list is ', draft_list)
+    # print('draft_list is ', draft_list)
+
     # Turning the list into list of lists
     updated_draft_list = [draft_list[x:x + 12] for x in range(0, len(draft_list), 12)]
     name = 'list_draft_' + str(year) + '.csv'
@@ -126,8 +129,8 @@ for year in range(FIRST_YEAR, LAST_YEAR+1):
 
                                                          'assists_per_game'
                                                          ''])
-    print(draft_df)
-    draft_df.to_csv(name)
+    # print(draft_df)
+    # draft_df.to_csv(name)
     engine = create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}"
                            .format(user="root",
                                    pw="pwdmysql",

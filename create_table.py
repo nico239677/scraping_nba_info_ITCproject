@@ -34,6 +34,5 @@ with connection.cursor() as cur:
                 "minutes_per_game INT,"
                 "points_per_game INT,"
                 "rebounds_per_game INT,"
-                "assists_per_game INT,"
-                "PRIMARY KEY (name)"
+                "assists_per_game INT"
                 ")")
