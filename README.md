@@ -1,12 +1,15 @@
-# Scraping basketball_reference - Moneyball, but for Basketball
+# Scraping project: basketball_reference.com
+## Moneyball movie, but for Basketball
 
-We scrap data about basketball players and teams, since basketball became a thing.
+<p>We scrap data about basketball <strong>players</strong> and <strong>teams</strong>, since basketball became a thing.
+<p>In the long run, this project could make it possible to apply data science to predict the value of a player based on his performances and assess how likely he is to become one of the most valuable players.</p>
 
-In the long run, this project could make it possible to apply data science to predict the value of a player based on his performances and assess how likely he is to become one of the most valuable players.
+### Usage
+<p>python webscraping.py --start [arg start_year] --end [arg end_year]</p>
 
-## Usage
-To be determined during Checkpoint #2
+### Tables
+<p align="center"><img src="image_tables.png"></p>
 
-## Authors & acknowledgement
-Big up to you guys for taking the time to correct us and give us feedback
- 
+### Authors & acknowledgement
+<p>Big up to you guys for taking the time to correct us and give us feedback
+</p> 

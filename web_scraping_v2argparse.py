@@ -6,8 +6,8 @@ import pandas as pd
 from sqlalchemy import create_engine
 from datetime import datetime
 
-with open('create_table.py', "rb") as source_file:
-    code = compile(source_file.read(), 'create_table.py', "exec")
+with open('database_config.py', "rb") as source_file:
+    code = compile(source_file.read(), 'database_config.py', "exec")
 exec(code)
 
 # Parsing years of the data to scrap
