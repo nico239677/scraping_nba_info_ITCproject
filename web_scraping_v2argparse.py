@@ -10,7 +10,7 @@ with open('create_table.py', "rb") as source_file:
     code = compile(source_file.read(), 'create_table.py', "exec")
 exec(code)
 
-# Parsing years of data to scrap
+# Parsing years of the data to scrap
 parser = argparse.ArgumentParser()
 parser.add_argument('-first',
                     '--start_year',
@@ -39,6 +39,7 @@ def read_link(link):
 
 
 def add_tag_link_and_year(global_list, string, year_draft):
+    """Adds the player draft number and draft year"""
     if string in str(draft.find('a')):
         element = draft.find('a').text if draft.find('a').text else None
         global_list.append(year_draft)
@@ -46,14 +47,8 @@ def add_tag_link_and_year(global_list, string, year_draft):
         return
 
 
-def add_tag_link(global_list, string):
-    if string in str(draft.find('a')):
-        element = draft.find('a').text if draft.find('a').text else None
-        global_list.append(element)
-        return
-
-
-def add_tag_text_in_tag(global_list, string):
+def add_text_in_tag(global_list, string):
+    """Adds player stats depending text in tag"""
     if string in str(draft):
         element = draft.text if draft.text else None
         global_list.append(element)
@@ -87,27 +82,27 @@ for year in range(FIRST_YEAR, LAST_YEAR+1):
         # Adding player info
         add_tag_link_and_year(draft_list, 'play-index', year)
 
-        # add_tag_link(draft_list, 'players')
+        # Adding player name: need to do a if statement,
+        # since player name usually is within a <a> tag,
+        # sometimes directly in a class tag without link
         if 'players' in str(draft.find('a')):
             element = draft.find('a').text
             draft_list.append(element)
-            #if draft.find('a').text
         elif 'data-stat="player"' in str(draft):
             element = draft.text
             draft_list.append(element)
 
-        add_tag_text_in_tag(draft_list, 'data-stat="g"')
-        add_tag_text_in_tag(draft_list, 'data-stat="mp"')
-        add_tag_text_in_tag(draft_list, 'data-stat="pts"')
-        add_tag_text_in_tag(draft_list, 'data-stat="trb"')
-        add_tag_text_in_tag(draft_list, 'data-stat="ast"')
+        # Adding player stats
+        add_text_in_tag(draft_list, 'data-stat="g"')
+        add_text_in_tag(draft_list, 'data-stat="mp"')
+        add_text_in_tag(draft_list, 'data-stat="pts"')
+        add_text_in_tag(draft_list, 'data-stat="trb"')
+        add_text_in_tag(draft_list, 'data-stat="ast"')
 
-        add_tag_text_in_tag(draft_list, 'data-stat="mp_per_g"')
-        add_tag_text_in_tag(draft_list, 'data-stat="pts_per_g"')
-        add_tag_text_in_tag(draft_list, 'data-stat="trb_per_g"')
-        add_tag_text_in_tag(draft_list, 'data-stat="ast_per_g"')
-
-    # print('draft_list is ', draft_list)
+        add_text_in_tag(draft_list, 'data-stat="mp_per_g"')
+        add_text_in_tag(draft_list, 'data-stat="pts_per_g"')
+        add_text_in_tag(draft_list, 'data-stat="trb_per_g"')
+        add_text_in_tag(draft_list, 'data-stat="ast_per_g"')
 
     # Turning the list into list of lists
     updated_draft_list = [draft_list[x:x + 12] for x in range(0, len(draft_list), 12)]
@@ -117,26 +112,50 @@ for year in range(FIRST_YEAR, LAST_YEAR+1):
     draft_df = pd.DataFrame(updated_draft_list, columns=['year',
                                                          'number_draft',
                                                          'name',
+
                                                          'number_of_games',
                                                          'total_minutes_played',
                                                          'total_points',
-
                                                          'total_rebounds',
                                                          'total_assists',
+
                                                          'minutes_per_game',
                                                          'points_per_game',
                                                          'rebounds_per_game',
-
                                                          'assists_per_game'
                                                          ''])
     # print(draft_df)
-    # draft_df.to_csv(name)
+
+    # Filling table if empty
     engine = create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}"
                            .format(user="root",
                                    pw="pwdmysql",
                                    db="basketball"))
     draft_df.to_sql('players', con=engine, if_exists='append', chunksize=1000, index=False)
 
+    #  Add only specific lines
+    connection = pymysql.connect(host='localhost',
+                                 user='root',
+                                 password='pwdmysql',
+                                 db='basketball')
+    cursor = connection.cursor()
+
+    cols = "','".join([str(i) for i in draft_df.columns.tolist()])
+    print('cols are ', cols)
+    for i, row in draft_df.iterrows():
+        print(row)
+        cursor.execute("INSERT INTO players( " + cols + ") VALUES ("+ str(row) + ")")
+
+    # Deletes duplicates
+    # connection = pymysql.connect(host='localhost',
+    #                              user='root',
+    #                              password='pwdmysql',
+    #                              charset='utf8mb4',
+    #                              cursorclass=pymysql.cursors.DictCursor)
+    # with connection.cursor() as cur:
+    #     cur.execute("DELETE c1 FROM players c1"
+    #                 "INNER JOIN contacts c2"
+    #                 "WHERE c1.id > c2.id AND c1.id = c2.id")
 
 print('\n\n\n----------\n\n\n')
 
@@ -153,7 +172,7 @@ print('\n\n\n----------\n\n\n')
 # scores = []
 # for row in all_rows:
 #     print(row.a['title'] if row.a['title'] else "N/A", ' : ',
-#           row.td.nextSibling.nextSibling.text if row.td.nextSibling.nextSibling.text else "N/A", ' wins, ',
+#           row.td.nextSibling.nextSibling.text if row.td.nextSibling.nextSibling.text else "N/A", ' win, ',
 #           row.td.nextSibling.nextSibling.nextSibling.text if row.td.nextSibling.nextSibling.nextSibling.text\
 # else "N/A", 'losses')
 #

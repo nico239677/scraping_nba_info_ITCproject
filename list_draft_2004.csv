@@ -1,0 +1,60 @@
+,number_draft,name,number_of_games,total_minutes_played,total_points,total_rebounds,total_assists,minutes_per_game,points_per_game,rebounds_per_game,assists_per_game
+0,1,Dwight Howard,1106,37177,18582,13641,1577,33.6,16.8,12.3,1.4
+1,2,Emeka Okafor,616,19055,7370,5967,520,30.9,12.0,9.7,0.8
+2,3,Ben Gordon,744,20366,11084,1851,1868,27.4,14.9,2.5,2.5
+3,4,Shaun Livingston,833,17188,5231,1989,2483,20.6,6.3,2.4,3.0
+4,5,Devin Harris,985,23963,10597,2151,3869,24.3,10.8,2.2,3.9
+5,6,Josh Childress,391,10432,3548,1850,609,26.7,9.1,4.7,1.6
+6,7,Luol Deng,902,30941,13361,5468,2042,34.3,14.8,6.1,2.3
+7,8,Rafael Araújo,139,1585,389,395,41,11.4,2.8,2.8,0.3
+8,9,Andre Iguodala,1122,37293,13517,5684,4849,33.2,12.0,5.1,4.3
+9,10,Luke Jackson,73,724,252,89,58,9.9,3.5,1.2,0.8
+10,11,Andris Biedriņš,516,11146,3247,3631,467,21.6,6.3,7.0,0.9
+11,12,Robert Swift,97,1500,416,376,20,15.5,4.3,3.9,0.2
+12,13,Sebastian Telfair,564,12149,4183,898,1960,21.5,7.4,1.6,3.5
+13,14,Kris Humphries,800,14232,5350,4314,556,17.8,6.7,5.4,0.7
+14,15,Al Jefferson,915,26299,14343,7690,1347,28.7,15.7,8.4,1.5
+15,16,Kirk Snyder,211,3540,1333,491,241,16.8,6.3,2.3,1.1
+16,17,Josh Smith,894,29000,12996,6653,2789,32.4,14.5,7.4,3.1
+17,18,J.R. Smith,971,26196,12131,3068,2074,27.0,12.5,3.2,2.1
+18,19,Dorell Wright,549,12280,4597,2093,850,22.4,8.4,3.8,1.5
+19,20,Jameer Nelson,878,24539,9940,2595,4508,27.9,11.3,3.0,5.1
+20,21,Pavel Podkolzin,6,28,4,9,0,4.7,0.7,1.5,0.0
+21,22,Viktor Khryapa,143,2351,643,492,142,16.4,4.5,3.4,1.0
+22,23,Sergei Monia,26,343,77,52,19,13.2,3.0,2.0,0.7
+23,24,Delonte West,432,11842,4198,1265,1540,27.4,9.7,2.9,3.6
+24,25,Tony Allen,820,18055,6654,2884,1077,22.0,8.1,3.5,1.3
+25,26,Kevin Martin,714,21559,12396,2278,1352,30.2,17.4,3.2,1.9
+26,27,Sasha Vujačić,581,8908,3094,1093,748,15.3,5.3,1.9,1.3
+27,28,Beno Udrih,831,18185,6952,1712,2858,21.9,8.4,2.1,3.4
+28,29,David Harrison,189,2686,949,549,47,14.2,5.0,2.9,0.2
+29,30,Anderson Varejão,627,15051,4561,4511,734,24.0,7.3,7.2,1.2
+30,31,Jackson Vroman,87,1111,285,261,51,12.8,3.3,3.0,0.6
+31,32,Peter John Ramos,6,20,11,4,0,3.3,1.8,0.7,0.0
+32,33,Lionel Chalmers,36,433,111,31,51,12.0,3.1,0.9,1.4
+33,34,Donta Smith,61,560,165,66,48,9.2,2.7,1.1,0.8
+34,35,Andre Emmett,14,73,20,8,1,5.2,1.4,0.6,0.1
+35,36,Antonio Burks,81,789,186,49,104,9.7,2.3,0.6,1.3
+36,37,Royal Ivey,492,6162,1641,557,501,12.5,3.3,1.1,1.0
+37,38,Chris Duhon,606,15526,3946,1364,2690,25.6,6.5,2.3,4.4
+38,39,Albert Miralles,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+39,40,Justin Reed,136,1436,472,186,68,10.6,3.5,1.4,0.5
+40,41,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,42
+41,Viktor Sanikidze,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,43
+42,Trevor Ariza,1064,31650,11215,5130,2297,29.7,10.5,4.8,2.2,44
+43,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,45,Bernard Robinson
+44,128,1909,576,315,126,14.9,4.5,2.5,1.0,46,Ha Seung-Jin
+45,46,316,70,67,3,6.9,1.5,1.5,0.1,47,Pape Sow
+46,76,879,219,214,12,11.6,2.9,2.8,0.2,48,NaN
+47,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,49,Sergei Lishouk,NaN
+48,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,50,Vassilis Spanoulis,31
+49,272,85,22,28,8.8,2.7,0.7,0.9,51,NaN,NaN
+50,NaN,NaN,NaN,NaN,NaN,NaN,NaN,52,NaN,NaN,NaN
+51,NaN,NaN,NaN,NaN,NaN,NaN,53,Matt Freije,42,588,133
+52,85,27,14.0,3.2,2.0,0.6,54,NaN,NaN,NaN,NaN
+53,NaN,NaN,NaN,NaN,NaN,55,Luis Flores,16,77,35,3
+54,11,4.8,2.2,0.2,0.7,56,NaN,NaN,NaN,NaN,NaN
+55,NaN,NaN,NaN,NaN,57,Sergei Karaulov,NaN,NaN,NaN,NaN,NaN
+56,NaN,NaN,NaN,NaN,58,NaN,NaN,NaN,NaN,NaN,NaN
+57,NaN,NaN,NaN,59,NaN,NaN,NaN,NaN,NaN,NaN,NaN
+58,NaN,NaN,,,,,,,,,
