@@ -8,7 +8,7 @@
 <p>python webscraping.py --start [arg start_year] --end [arg end_year]</p>
 
 ### Tables
-<p align="center"><img src="image_tables.png"></p>
+<p align="center"><img src="image_tables"></p>
 
 ### Authors & acknowledgement
 <p>Big up to you guys for taking the time to correct us and give us feedback
