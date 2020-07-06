@@ -7,6 +7,10 @@
 ### Usage
 <p>python webscraping.py --start [arg start_year] --end [arg end_year]</p>
 
+### Installation
+<p>Run following command:</p>
+<nano>pip install -r requirements.txt</nano>
+
 ### Tables
 <p align="center"><img src="image_tables"></p>
 
