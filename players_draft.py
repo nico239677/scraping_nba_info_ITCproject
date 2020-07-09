@@ -106,7 +106,6 @@ for year in range(FIRST_YEAR, LAST_YEAR+1):
 
     # Turning the list into list of lists
     updated_draft_list = [draft_list[x:x + 12] for x in range(0, len(draft_list), 12)]
-    name = 'list_draft_' + str(year) + '.csv'
 
     # Storing the data in dataframe and exporting it to CSV
     draft_df = pd.DataFrame(updated_draft_list, columns=['year',
@@ -131,20 +130,20 @@ for year in range(FIRST_YEAR, LAST_YEAR+1):
                            .format(user="root",
                                    pw="pwdmysql",
                                    db="basketball"))
-    draft_df.to_sql('players', con=engine, if_exists='append', chunksize=1000, index=False)
+    draft_df.to_sql('drafts', con=engine, if_exists='append', chunksize=1000, index=False)
 
     #  Add only specific lines
-    connection = pymysql.connect(host='localhost',
-                                 user='root',
-                                 password='pwdmysql',
-                                 db='basketball')
-    cursor = connection.cursor()
-
-    cols = "','".join([str(i) for i in draft_df.columns.tolist()])
-    print('cols are ', cols)
-    for i, row in draft_df.iterrows():
-        print(row)
-        cursor.execute("INSERT INTO players( " + cols + ") VALUES ("+ str(row) + ")")
+    # connection = pymysql.connect(host='localhost',
+    #                              user='root',
+    #                              password='pwdmysql',
+    #                              db='basketball')
+    # cursor = connection.cursor()
+    #
+    # cols = "','".join([str(i) for i in draft_df.columns.tolist()])
+    # print('cols are ', cols)
+    # for i, row in draft_df.iterrows():
+    #     print(row)
+    #     cursor.execute("INSERT INTO players( " + cols + ") VALUES ("+ str(row) + ")")
 
     # Deletes duplicates
     # connection = pymysql.connect(host='localhost',
