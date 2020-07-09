@@ -8,7 +8,6 @@ connection = pymysql.connect(host='localhost',
 with connection.cursor() as cur:
     # Create database
     print("\nCreating database basketball if it does not already exists\n")
-    cur.execute("DROP TABLE IF EXISTS players")
     cur.execute('CREATE DATABASE IF NOT EXISTS basketball')
 
     connection = pymysql.connect(host='localhost',
@@ -24,13 +23,12 @@ with connection.cursor() as cur:
     print("\nCreating table players if it does not already exists...\n")
     cur.execute("DROP TABLE IF EXISTS players")
     cur.execute("CREATE TABLE IF NOT EXISTS players ("
-                "id INT NOT NULL AUTO_INCREMENT,"
-                "name VARCHAR(30),"
+                "name_player VARCHAR(30),"
                 "number_of_games_career INT,"
                 "total_points_career INT,"
-                "total_rebounds_career INT,"
+                "total_rebounds_career VARCHAR(5),"
                 "total_assists_career INT,"
-                "PRIMARY KEY (id)"
+                "PRIMARY KEY (name_player)"
                 ")")
 
     # Create table drafts
@@ -51,4 +49,5 @@ with connection.cursor() as cur:
                 "rebounds_per_game INT,"
                 "assists_per_game INT,"
                 "PRIMARY KEY (id)"
+                # "FOREIGN KEY (name) REFERENCES players (name_player)"
                 ")")
