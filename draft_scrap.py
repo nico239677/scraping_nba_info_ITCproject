@@ -3,8 +3,9 @@ import argparse
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-from sqlalchemy import create_engine
 from datetime import datetime
+from functions import *
+from sqlalchemy import create_engine
 
 with open('database_config.py', "rb") as source_file:
     code = compile(source_file.read(), 'database_config.py', "exec")
@@ -25,35 +26,6 @@ parser.add_argument('-last',
 args = parser.parse_args()
 
 
-def read_link(link):
-    """Reads link to manipulate it with BeautifulSoup"""
-    # Handles error if link is incorrect
-    try:
-        r = requests.get(link)
-        print('link: \n', link)
-    except requests.exceptions.ConnectionError:
-        print('URL not valid')
-        sys.exit()
-    soup = BeautifulSoup(r.content, 'lxml')
-    return soup
-
-
-def add_tag_link_and_year(global_list, string, year_draft):
-    """Adds the player draft number and draft year"""
-    if string in str(draft.find('a')):
-        element = draft.find('a').text if draft.find('a').text else None
-        global_list.append(year_draft)
-        global_list.append(element)
-        return
-
-
-def add_text_in_tag(global_list, string):
-    """Adds player stats depending text in tag"""
-    if string in str(draft):
-        element = draft.text if draft.text else None
-        global_list.append(element)
-
-
 main_link = 'https://www.basketball-reference.com/'
 
 # Getting the data of all drafts for a specific period of time
@@ -67,8 +39,8 @@ except AssertionError:
     print("Last year to scrap should be higher than first year")
     sys.exit()
 
+draft_list = []
 for year in range(FIRST_YEAR, LAST_YEAR+1):
-    print('year is ', year)
     link_draft = main_link + 'draft/NBA_' + str(year) + '.html'
 
     draft = read_link(link_draft)
@@ -77,10 +49,9 @@ for year in range(FIRST_YEAR, LAST_YEAR+1):
     draft_table = draft.find(class_="overthrow table_container")
     body = draft_table.find("tbody").find_all("td")
 
-    draft_list = []
     for draft in body:
         # Adding player info
-        add_tag_link_and_year(draft_list, 'play-index', year)
+        add_tag_link_and_year(draft_list, draft, 'play-index', year)
 
         # Adding player name: need to do a if statement,
         # since player name usually is within a <a> tag,
@@ -93,70 +64,74 @@ for year in range(FIRST_YEAR, LAST_YEAR+1):
             draft_list.append(element)
 
         # Adding player stats
-        add_text_in_tag(draft_list, 'data-stat="g"')
-        add_text_in_tag(draft_list, 'data-stat="mp"')
-        add_text_in_tag(draft_list, 'data-stat="pts"')
-        add_text_in_tag(draft_list, 'data-stat="trb"')
-        add_text_in_tag(draft_list, 'data-stat="ast"')
+        add_text_in_tag(draft_list, draft, 'data-stat="g"')
+        add_text_in_tag(draft_list, draft, 'data-stat="mp"')
+        add_text_in_tag(draft_list, draft, 'data-stat="pts"')
+        add_text_in_tag(draft_list, draft, 'data-stat="trb"')
+        add_text_in_tag(draft_list, draft, 'data-stat="ast"')
 
-        add_text_in_tag(draft_list, 'data-stat="mp_per_g"')
-        add_text_in_tag(draft_list, 'data-stat="pts_per_g"')
-        add_text_in_tag(draft_list, 'data-stat="trb_per_g"')
-        add_text_in_tag(draft_list, 'data-stat="ast_per_g"')
+        add_text_in_tag(draft_list, draft, 'data-stat="mp_per_g"')
+        add_text_in_tag(draft_list, draft, 'data-stat="pts_per_g"')
+        add_text_in_tag(draft_list, draft, 'data-stat="trb_per_g"')
+        add_text_in_tag(draft_list, draft, 'data-stat="ast_per_g"')
 
     # Turning the list into list of lists
-    updated_draft_list = [draft_list[x:x + 12] for x in range(0, len(draft_list), 12)]
+updated_draft_list = [draft_list[x:x + 12] for x in range(0, len(draft_list), 12)]
 
-    # Storing the data in dataframe and exporting it to CSV
-    draft_df = pd.DataFrame(updated_draft_list, columns=['year',
-                                                         'number_draft',
-                                                         'name',
+# Storing the data in dataframe and exporting it to CSV
+draft_df = pd.DataFrame(updated_draft_list, columns=['year',
+                                                     'number_draft',
+                                                     'name',
 
-                                                         'number_of_games',
-                                                         'total_minutes_played',
-                                                         'total_points',
-                                                         'total_rebounds',
-                                                         'total_assists',
+                                                     'number_of_games',
+                                                     'total_minutes_played',
+                                                     'total_points',
+                                                     'total_rebounds',
+                                                     'total_assists',
 
-                                                         'minutes_per_game',
-                                                         'points_per_game',
-                                                         'rebounds_per_game',
-                                                         'assists_per_game'
-                                                         ''])
-    # print(draft_df)
+                                                     'minutes_per_game',
+                                                     'points_per_game',
+                                                     'rebounds_per_game',
+                                                     'assists_per_game'
+                                                     ''])
 
-    # Filling table if empty
-    engine = create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}"
-                           .format(user="root",
-                                   pw="pwdmysql",
-                                   db="basketball"))
-    draft_df.to_sql('drafts', con=engine, if_exists='append', chunksize=1000, index=False)
+#  Filling tables line by line
+cursor = connection.cursor()
 
-    #  Add only specific lines
-    # connection = pymysql.connect(host='localhost',
-    #                              user='root',
-    #                              password='pwdmysql',
-    #                              db='basketball')
-    # cursor = connection.cursor()
-    #
-    # cols = "','".join([str(i) for i in draft_df.columns.tolist()])
-    # print('cols are ', cols)
-    # for i, row in draft_df.iterrows():
-    #     print(row)
-    #     cursor.execute("INSERT INTO players( " + cols + ") VALUES ("+ str(row) + ")")
+cols = ", ".join([str(i) for i in draft_df.columns.tolist()])
+for i, row in draft_df.iterrows():
+    cursor.execute("INSERT IGNORE INTO drafts ( " + cols + ") VALUES (" + "%s,"*(len(row)-1) + "%s)", tuple(row))
 
-    # Deletes duplicates
-    # connection = pymysql.connect(host='localhost',
-    #                              user='root',
-    #                              password='pwdmysql',
-    #                              charset='utf8mb4',
-    #                              cursorclass=pymysql.cursors.DictCursor)
-    # with connection.cursor() as cur:
-    #     cur.execute("DELETE c1 FROM players c1"
-    #                 "INNER JOIN contacts c2"
-    #                 "WHERE c1.id > c2.id AND c1.id = c2.id")
+# Deleting duplicates
+cursor.execute("DROP TABLE IF EXISTS drafts_no_duplicates")
+cursor.execute("CREATE TABLE drafts_no_duplicates SELECT DISTINCT year,"
+               "number_draft,"
+               "name,"
+               "number_of_games,"
+               "total_minutes_played,"
+               "total_points,"
+               "total_rebounds,"
+               "total_assists,"
+               "minutes_per_game,"
+               "points_per_game,"
+               "rebounds_per_game, assists_per_game "
+               "FROM drafts")
+cursor.execute("DROP TABLE drafts")
+cursor.execute("ALTER TABLE drafts_no_duplicates RENAME TO drafts")
 
-print('\n\n\n----------\n\n\n')
+connection.commit()
+
+
+# Filling table if empty
+# engine = create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}"
+#                        .format(user="root",
+#                                pw="pwdmysql",
+#                                db="basketball"))
+# draft_df.to_sql('drafts', con=engine, if_exists='append', chunksize=1000, index=False)
+
+# print('\n\n\n----------\n\n\n')
+
+# print('BONUS')
 
 # Get global stats from main page
 # print("\nRESULTS OF THE YEAR SO FAR")

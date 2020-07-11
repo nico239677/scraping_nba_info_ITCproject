@@ -1,3 +1,8 @@
+import sys
+import requests
+from bs4 import BeautifulSoup
+
+
 def read_link(link):
     """Reads link to manipulate it with BeautifulSoup"""
     # Handles error if link is incorrect
@@ -11,7 +16,7 @@ def read_link(link):
     return soup
 
 
-def add_tag_link_and_year(global_list, string, year_draft):
+def add_tag_link_and_year(global_list, draft, string, year_draft):
     """Adds the player draft number and draft year"""
     if string in str(draft.find('a')):
         element = draft.find('a').text if draft.find('a').text else None
@@ -20,8 +25,9 @@ def add_tag_link_and_year(global_list, string, year_draft):
         return
 
 
-def add_text_in_tag(global_list, string):
+def add_text_in_tag(global_list, draft, string):
     """Adds player stats depending text in tag"""
     if string in str(draft):
-        element     = draft.text if draft.text else None
+        element = draft.text if draft.text else None
         global_list.append(element)
+        return
