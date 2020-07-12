@@ -19,9 +19,9 @@ with connection.cursor() as cur:
 
     cur.execute('use basketball')
 
-    # cur.execute("DROP TABLE IF EXISTS players")
     # cur.execute("DROP TABLE IF EXISTS drafts")
     # cur.execute("DROP TABLE IF EXISTS teams")
+    # cur.execute("DROP TABLE IF EXISTS players")
 
     # Create table players
     print("\nCreating table players if it does not already exists...\n")
@@ -32,17 +32,8 @@ with connection.cursor() as cur:
                 "total_points_career INT,"
                 "total_rebounds_career VARCHAR(5),"
                 "total_assists_career INT,"
-                "PRIMARY KEY (id)"
-                ")")
-
-    # Create table teams
-    print("\nCreating table teams if it does not already exists...\n")
-    cur.execute("CREATE TABLE IF NOT EXISTS teams ("
-                "idteam INT NOT NULL AUTO_INCREMENT,"
-                "year INT,"
-                "team_name VARCHAR(30),"
-                "team_player VARCHAR(30),"
-                "PRIMARY KEY (idteam)"
+                "PRIMARY KEY (id),"
+                "UNIQUE (name_player)"
                 ")")
 
     # Create table drafts
@@ -61,6 +52,20 @@ with connection.cursor() as cur:
                 "points_per_game INT,"
                 "rebounds_per_game INT,"
                 "assists_per_game INT,"
-                "PRIMARY KEY (id)"
-                # "FOREIGN KEY (name) REFERENCES players (name_player)"
+                "PRIMARY KEY (id),"
+                "FOREIGN KEY (name) REFERENCES players(name_player)"
                 ")")
+
+    # Create table teams
+    print("\nCreating table teams if it does not already exists...\n")
+    cur.execute("CREATE TABLE IF NOT EXISTS teams ("
+                "id INT NOT NULL AUTO_INCREMENT,"
+                "year INT,"
+                "team_name VARCHAR(30),"
+                "team_player VARCHAR(30),"
+                "PRIMARY KEY (id),"
+                "FOREIGN KEY (team_player) REFERENCES players(name_player)"
+                ")")
+
+
+
