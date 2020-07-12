@@ -1,11 +1,11 @@
-import sys
 import argparse
-import requests
-from bs4 import BeautifulSoup
+from tqdm import tqdm
 import pandas as pd
 from datetime import datetime
 from functions import *
-from sqlalchemy import create_engine
+from tqdm import tqdm
+
+NUMBER_SCRAPED_COLUMNS = 12
 
 with open('database_config.py', "rb") as source_file:
     code = compile(source_file.read(), 'database_config.py', "exec")
@@ -40,13 +40,17 @@ except AssertionError:
     sys.exit()
 
 draft_list = []
-for year in range(FIRST_YEAR, LAST_YEAR+1):
+for year in tqdm(range(FIRST_YEAR, LAST_YEAR+1)):
     link_draft = main_link + 'draft/NBA_' + str(year) + '.html'
 
     draft = read_link(link_draft)
 
     print('LIST OF ALL DRAFTS FOR YEAR ', year)
-    draft_table = draft.find(class_="overthrow table_container")
+    try:
+        draft_table = draft.find(class_="overthrow table_container")
+    except AttributeError:
+        print('Link not valid')
+        continue
     body = draft_table.find("tbody").find_all("td")
 
     for draft in body:
@@ -55,7 +59,7 @@ for year in range(FIRST_YEAR, LAST_YEAR+1):
 
         # Adding player name: need to do a if statement,
         # since player name usually is within a <a> tag,
-        # sometimes directly in a class tag without link
+        # but sometimes it is directly in a class tag without link
         if 'players' in str(draft.find('a')):
             element = draft.find('a').text
             draft_list.append(element)
@@ -76,9 +80,10 @@ for year in range(FIRST_YEAR, LAST_YEAR+1):
         add_text_in_tag(draft_list, draft, 'data-stat="ast_per_g"')
 
     # Turning the list into list of lists
-updated_draft_list = [draft_list[x:x + 12] for x in range(0, len(draft_list), 12)]
+updated_draft_list = [draft_list[x:x + NUMBER_SCRAPED_COLUMNS]
+                      for x in range(0, len(draft_list), NUMBER_SCRAPED_COLUMNS)]
 
-# Storing the data in dataframe and exporting it to CSV
+# Storing the data in dataframe and exporting it to database
 draft_df = pd.DataFrame(updated_draft_list, columns=['year',
                                                      'number_draft',
                                                      'name',

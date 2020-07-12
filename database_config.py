@@ -19,9 +19,9 @@ with connection.cursor() as cur:
 
     cur.execute('use basketball')
 
-    cur.execute("DROP TABLE IF EXISTS players")
-    cur.execute("DROP TABLE IF EXISTS drafts")
-    cur.execute("DROP TABLE IF EXISTS teams")
+    # cur.execute("DROP TABLE IF EXISTS players")
+    # cur.execute("DROP TABLE IF EXISTS drafts")
+    # cur.execute("DROP TABLE IF EXISTS teams")
 
     # Create table players
     print("\nCreating table players if it does not already exists...\n")
@@ -39,9 +39,9 @@ with connection.cursor() as cur:
     print("\nCreating table teams if it does not already exists...\n")
     cur.execute("CREATE TABLE IF NOT EXISTS teams ("
                 "idteam INT NOT NULL AUTO_INCREMENT,"
+                "year INT,"
                 "team_name VARCHAR(30),"
                 "team_player VARCHAR(30),"
-                "year INT,"
                 "PRIMARY KEY (idteam)"
                 ")")
 

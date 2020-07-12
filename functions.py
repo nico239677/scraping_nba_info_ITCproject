@@ -8,7 +8,7 @@ def read_link(link):
     # Handles error if link is incorrect
     try:
         r = requests.get(link)
-        print('link: \n', link)
+        # print('link: \n', link)
     except requests.exceptions.ConnectionError:
         print('URL not valid')
         sys.exit()

@@ -17,8 +17,9 @@ and end_letter ('z' by default)</p>
 <p>This code makes it possible to scrap data all drafts between start_year (2010 by default)
 and end_year (2020 by default)</p>
 <p>To scrap data about teams:</p>
-<nano> <strong>python teams_draft.py --start [arg start_year] --end [arg end_year]</strong></nano>
-<p>This code makes it possible to scrap data all drafts between start_year (by default 2010) and end_year (by default 2020)</p>
+<nano> <strong>python teams_draft.py --start [arg start_year] --end [arg end_year] --teams [team1] [team2] [team3] </strong></nano>
+<p>This code makes it possible to scrap data all drafts between start_year (by default 2010)
+and end_year (by default 2020), for specific teams</p>
 
 ### Installation
 <p>Run following command:</p>

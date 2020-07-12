@@ -3,7 +3,8 @@ import pandas as pd
 from tqdm import tqdm
 import string
 from functions import *
-# from sqlalchemy import create_engine
+
+NUMBER_SCRAPED_COLUMNS = 5
 
 with open('database_config.py', "rb") as source_file:
     code = compile(source_file.read(), 'database_config.py', "exec")
@@ -65,10 +66,19 @@ for char in range_alphabet:
     link_players_alphabet = main_link + 'players/' + char
     alphabet_letter = read_link(link_players_alphabet)
     draft_table = alphabet_letter.find(class_="overthrow table_container")
-    body = draft_table.find("tbody").find_all("th")
+    try:
+        body = draft_table.find("tbody").find_all("th")
+    except AttributeError:
+        print('Link not valid')
+        continue
     for player in tqdm(body):
         add_player_and_stats(player, player_list)
-updated_player_list = [player_list[x:x + 5] for x in range(0, len(player_list), 5)]
+
+# Turning the list into list of lists
+updated_player_list = [player_list[x:x + NUMBER_SCRAPED_COLUMNS]
+                       for x in range(0, len(player_list), NUMBER_SCRAPED_COLUMNS)]
+
+# Storing the data in dataframe and exporting it to database
 player_df = pd.DataFrame(updated_player_list, columns=['name_player',
                                                        'number_of_games_career',
                                                        'total_points_career',
