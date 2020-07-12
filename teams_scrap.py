@@ -64,7 +64,6 @@ for team in tqdm(TEAMS):
         team_page = read_link(total_link)
         try:
             team_year = team_page.find('h1').find('span').text[:-3]
-            # team_name = team_page.find('h1').find_all('span')
         except AttributeError:
             print('Link not valid: team', team, 'does not have data for year', year)
             continue

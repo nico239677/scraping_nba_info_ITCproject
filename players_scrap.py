@@ -94,7 +94,7 @@ for i, row in player_df.iterrows():
     cursor.execute("INSERT IGNORE INTO players ( " + cols + ") VALUES (" + "%s," * (len(row) - 1) + "%s)", tuple(row))
 
 # Deleting duplicates
-cursor.execute("DROP TABLE IF EXISTS players_no_duplicates")
+# cursor.execute("DROP TABLE IF EXISTS players_no_duplicates")
 cursor.execute("CREATE TABLE players_no_duplicates SELECT DISTINCT name_player,"
                "number_of_games_career,"
                "total_points_career,"
