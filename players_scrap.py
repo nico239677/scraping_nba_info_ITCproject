@@ -24,23 +24,23 @@ parser.add_argument('-last',
 args = parser.parse_args()
 
 
-def add_player_and_stats(row_player, global_list):
-    name_player = row_player.find('a')['href']
-    link_player = main_link + name_player
-    player_page = read_link(link_player)
-    player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text
-    global_list.append(player_name)
-    # print('player name is ', player_name)
-    player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
-    player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
-    total_games = player_stats_p1[1].text
-    total_points = player_stats_p1[3].text
-    total_rebounds = player_stats_p1[5].text
-    total_assists = player_stats_p1[7].text
-    global_list.append(total_games)
-    global_list.append(total_points)
-    global_list.append(total_rebounds)
-    global_list.append(total_assists)
+# def add_player_and_stats(row_player, global_list):
+#     name_player = row_player.find('a')['href']
+#     link_player = main_link + name_player
+#     player_page = read_link(link_player)
+#     player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text
+#     global_list.append(player_name)
+#     print('player name is ', player_name)
+#     player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
+#     player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
+#     total_games = player_stats_p1[1].text
+#     total_points = player_stats_p1[3].text
+#     total_rebounds = player_stats_p1[5].text
+#     total_assists = player_stats_p1[7].text
+#     global_list.append(total_games)
+#     global_list.append(total_points)
+#     global_list.append(total_rebounds)
+#     global_list.append(total_assists)
 
 
 main_link = 'https://www.basketball-reference.com/'
@@ -72,14 +72,49 @@ for char in range_alphabet:
         print('Link not valid')
         continue
     for player in tqdm(body):
-        add_player_and_stats(player, player_list)
+        # add_player_and_stats(player, player_list)
+        name_player = player.find('a')['href']
+        link_player = main_link + name_player
+        player_page = read_link(link_player)
+        player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text
+        player_list.append(player_name)
+        print('player name is ', player_name)
+        player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
+        player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
+        total_games = player_stats_p1[1].text
+        total_points = player_stats_p1[3].text
+        total_rebounds = player_stats_p1[5].text
+        total_assists = player_stats_p1[7].text
+
+        arr_per_game = player_page.find('div', attrs={'class': "overthrow table_container", 'id': 'div_per_game'})
+        body_per_game = arr_per_game.find('tbody').find_all('tr')
+        for row in body_per_game:
+            try:
+                year = row.find('a').text[:-3]
+                # print('year is ', year)
+                team = row.find('td', attrs={'data-stat': 'team_id'})
+                try:
+                    name_team = team.find('a').text
+                except:
+                    name_team = team.text
+                print(name_team)
+            except:
+                pass
+            player_list.append(year)
+            player_list.append(name_team)
+            player_list.append(total_games)
+            player_list.append(total_points)
+            player_list.append(total_rebounds)
+            player_list.append(total_assists)
 
 # Turning the list into list of lists
 updated_player_list = [player_list[x:x + NUMBER_SCRAPED_COLUMNS]
                        for x in range(0, len(player_list), NUMBER_SCRAPED_COLUMNS)]
 
 # Storing the data in dataframe and exporting it to database
-player_df = pd.DataFrame(updated_player_list, columns=['name_player',
+player_df = pd.DataFrame(updated_player_list, columns=['year_played',
+                                                       'team_year',
+                                                       'name_player',
                                                        'number_of_games_career',
                                                        'total_points_career',
                                                        'total_rebounds_career',
@@ -95,16 +130,16 @@ for i, row in player_df.iterrows():
 
 # Deleting duplicates
 # cursor.execute("DROP TABLE IF EXISTS players_no_duplicates")
-cursor.execute("CREATE TABLE players_no_duplicates SELECT DISTINCT name_player,"
-               "number_of_games_career,"
-               "total_points_career,"
-               "total_rebounds_career,"
-               "total_assists_career "
-               "FROM players")
-cursor.execute("DROP TABLE players")
-cursor.execute("ALTER TABLE players_no_duplicates RENAME TO players")
-
-connection.commit()
+# cursor.execute("CREATE TABLE players_no_duplicates SELECT DISTINCT name_player,"
+#                "number_of_games_career,"
+#                "total_points_career,"
+#                "total_rebounds_career,"
+#                "total_assists_career "
+#                "FROM players")
+# cursor.execute("DROP TABLE players")
+# cursor.execute("ALTER TABLE players_no_duplicates RENAME TO players")
+#
+# connection.commit()
 
 # engine = create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}"
 #                        .format(user="root",
