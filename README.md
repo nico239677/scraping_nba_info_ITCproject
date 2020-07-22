@@ -8,7 +8,7 @@ based on his performances and assess how likely he is to become one of the most 
 
 ### Usage
 <p>To scrap data about players:</p>
-<nano> <strong>python players_scrap.py --start [arg start_letter] --end [arg end_letter]</strong>p</nano>
+<nano> <strong>python players_scrap.py --start [arg start_letter] --end [arg end_letter]</strong></nano>
 <p>This code makes it possible to scrap data about players whose last name is between start_letter ('a' by default)
 and end_letter ('z' by default)</p>
 <p></p>
@@ -26,7 +26,7 @@ and end_year (by default 2020), for specific teams</p>
 <nano>pip install -r requirements.txt</nano>
 
 ### Tables
-<p align="center"><img src="image_tables"></p>
+<p align="center"><img src="image_tables.pdf"></p>
 
 ### Authors & acknowledgement
 <p>Thanks to you guys for taking the time to correct us and give us feedback</p>
