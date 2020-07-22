@@ -39,16 +39,6 @@ with connection.cursor() as cur:
     # Create table teams
     print("\nCreating table teams if it does not already exists...\n")
     cur.execute("CREATE TABLE IF NOT EXISTS teams ("
-                "id INT NOT NULL AUTO_INCREMENT,"
-                "year INT,"
-                "team_name VARCHAR(30),"
-                "team_player VARCHAR(30),"
-                "PRIMARY KEY (id)"
-                ")")
-
-    # Create table teams
-    print("\nCreating table teams if it does not already exists...\n")
-    cur.execute("CREATE TABLE IF NOT EXISTS teams ("
                 "id_team INT NOT NULL AUTO_INCREMENT,"
                 "team_name VARCHAR(30),"
                 "PRIMARY KEY (id_team)"
