@@ -1,6 +1,9 @@
 import sys
 import requests
 from bs4 import BeautifulSoup
+from gevent import monkey as curious_george
+curious_george.patch_all(thread=False, select=False)
+import logging
 
 
 def read_link(link):
@@ -31,3 +34,17 @@ def add_text_in_tag(global_list, draft, string):
         element = draft.text if draft.text else None
         global_list.append(element)
         return
+
+
+def setup_logger(name, log_file, formatter, level=logging.INFO):
+    """To setup as many loggers as you want"""
+
+    handler = logging.FileHandler(log_file)
+    handler.setFormatter(formatter)
+
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+    logger.addHandler(logging.StreamHandler(sys.stdout))
+
+    return logger

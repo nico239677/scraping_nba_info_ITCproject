@@ -1,23 +1,22 @@
+from functions import setup_logger
 import pymysql.cursors
+import logging
+
 connection = pymysql.connect(host='localhost',
                              user='root',
                              password='pwdmysql',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+logger = setup_logger('first_logger', 'database_management.log', formatter)
+
 with connection.cursor() as cur:
     # Create database
-    print("\nCreating database basketball if it does not already exists\n")
+    logger.info("\nCreating database basketball if it does not already exists\n")
     cur.execute('CREATE DATABASE IF NOT EXISTS basketball')
-
-    connection = pymysql.connect(host='localhost',
-                                 user='root',
-                                 password='pwdmysql',
-                                 db='basketball',
-                                 charset='utf8mb4',
-                                 cursorclass=pymysql.cursors.DictCursor)
-
     cur.execute('use basketball')
+    # cur.execute('\W')
 
     # cur.execute("DROP TABLE IF EXISTS teams")
     # cur.execute("DROP TABLE IF EXISTS players")
@@ -25,7 +24,7 @@ with connection.cursor() as cur:
     # cur.execute("DROP TABLE IF EXISTS teams_to_players")
 
     # Create table players
-    print("\nCreating table players if it does not already exists...\n")
+    logger.info("\nCreating table players if it does not already exists...\n")
     cur.execute("CREATE TABLE IF NOT EXISTS players ("
                 "id_player INT NOT NULL AUTO_INCREMENT,"
                 "name_player VARCHAR(30),"
@@ -37,7 +36,7 @@ with connection.cursor() as cur:
                 ")")
 
     # Create table teams
-    print("\nCreating table teams if it does not already exists...\n")
+    logger.info("\nCreating table teams if it does not already exists...\n")
     cur.execute("CREATE TABLE IF NOT EXISTS teams ("
                 "id_team INT NOT NULL AUTO_INCREMENT,"
                 "team_name VARCHAR(30),"
@@ -45,7 +44,7 @@ with connection.cursor() as cur:
                 ")")
 
     # Create table teams_to_players
-    print("\nCreating table teams_to_players if it does not already exists...\n")
+    logger.info("\nCreating table teams_to_players if it does not already exists...\n")
     cur.execute("CREATE TABLE IF NOT EXISTS teams_to_players ("
                 "id_teamp INT NOT NULL,"
                 "id_playert INT NOT NULL,"
@@ -55,7 +54,7 @@ with connection.cursor() as cur:
                 ")")
 
     # Create table drafts
-    print("\nCreating table drafts if it does not already exists...\n")
+    logger.info("\nCreating table drafts if it does not already exists...\n")
     cur.execute("CREATE TABLE IF NOT EXISTS drafts ("
                 "id INT NOT NULL AUTO_INCREMENT,"
                 "year INT,"

@@ -4,7 +4,7 @@ from tqdm import tqdm
 import string
 from functions import *
 
-NUMBER_SCRAPED_COLUMNS = 5
+NUMBER_SCRAPED_COLUMNS = 7
 
 with open('database_config.py', "rb") as source_file:
     code = compile(source_file.read(), 'database_config.py', "exec")
@@ -77,7 +77,6 @@ for char in range_alphabet:
         link_player = main_link + name_player
         player_page = read_link(link_player)
         player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text
-        player_list.append(player_name)
         print('player name is ', player_name)
         player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
         player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
@@ -97,36 +96,40 @@ for char in range_alphabet:
                     name_team = team.find('a').text
                 except:
                     name_team = team.text
-                print(name_team)
+                # print(name_team)
             except:
                 pass
-            player_list.append(year)
-            player_list.append(name_team)
+            player_list.append(player_name)
             player_list.append(total_games)
             player_list.append(total_points)
             player_list.append(total_rebounds)
             player_list.append(total_assists)
+            player_list.append(year)
+            player_list.append(name_team)
 
 # Turning the list into list of lists
 updated_player_list = [player_list[x:x + NUMBER_SCRAPED_COLUMNS]
                        for x in range(0, len(player_list), NUMBER_SCRAPED_COLUMNS)]
 
 # Storing the data in dataframe and exporting it to database
-player_df = pd.DataFrame(updated_player_list, columns=['year_played',
-                                                       'team_year',
-                                                       'name_player',
+player_df = pd.DataFrame(updated_player_list, columns=['name_player',
                                                        'number_of_games_career',
                                                        'total_points_career',
                                                        'total_rebounds_career',
-                                                       'total_assists_career'])
-
+                                                       'total_assists_career',
+                                                       'year',
+                                                       'team_name'])
 
 #  Filling tables line by line
 cursor = connection.cursor()
 
 cols = ", ".join([str(i) for i in player_df.columns.tolist()])
 for i, row in player_df.iterrows():
-    cursor.execute("INSERT IGNORE INTO players ( " + cols + ") VALUES (" + "%s," * (len(row) - 1) + "%s)", tuple(row))
+    cursor.execute("INSERT IGNORE INTO players "
+                   "(name_player, number_of_games_career, total_points_career, total_rebounds_career,"
+                   "total_assists_career) VALUES (%s, %s, %s, %s, %s)", tuple(row)[:5])
+    cursor.execute("INSERT IGNORE INTO teams (team_name) VALUES (%s)", tuple(row)[6])
+    cursor.execute("INSERT IGNORE INTO teams_to_players (year) VALUES (%s)", tuple(row)[5])
 
 # Deleting duplicates
 # cursor.execute("DROP TABLE IF EXISTS players_no_duplicates")
@@ -146,3 +149,61 @@ for i, row in player_df.iterrows():
 #                                pw="pwdmysql",
 #                                db="basketball"))
 # player_df.to_sql('players', con=engine, if_exists='append', chunksize=1000, index=False)
+
+
+
+# Scrap all players whose last name starts with a letter between FIRST_LETTER and LAST_LETTER
+# player_list = []
+# for char in range_alphabet:
+#     print('Scraping all players whose last name starts with ', char, '...')
+#     link_players_alphabet = main_link + 'players/' + char
+#     alphabet_letter = read_link(link_players_alphabet)
+#     draft_table = alphabet_letter.find(class_="overthrow table_container")
+#     try:
+#         body = draft_table.find("tbody").find_all("th")
+#     except AttributeError:
+#         print('Link not valid')
+#         continue
+#     for player in tqdm(body):
+#         # add_player_and_stats(player, player_list)
+#         name_player = player.find('a')['href']
+#         link_player = main_link + name_player
+#         player_page = read_link(link_player)
+#         player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text
+#         player_list.append(player_name)
+#         print('player name is ', player_name)
+#         player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
+#         player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
+#         total_games = player_stats_p1[1].text
+#         total_points = player_stats_p1[3].text
+#         total_rebounds = player_stats_p1[5].text
+#         total_assists = player_stats_p1[7].text
+#
+#         arr_per_game = player_page.find('div', attrs={'class': "overthrow table_container", 'id': 'div_per_game'})
+#         body_per_game = arr_per_game.find('tbody').find_all('tr')
+#         for row in body_per_game:
+#             try:
+#                 year = row.find('a').text[:-3]
+#                 # print('year is ', year)
+#                 team = row.find('td', attrs={'data-stat': 'team_id'})
+#                 try:
+#                     name_team = team.find('a').text
+#                 except:
+#                     name_team = team.text
+#             except:
+#                 pass
+#             player_list.append(year)
+#             player_list.append(name_team)
+#             player_list.append(total_games)
+#             player_list.append(total_points)
+#             player_list.append(total_rebounds)
+#             player_list.append(total_assists)
+
+
+#  Filling tables line by line
+# cursor = connection.cursor()
+#
+# cols = ", ".join([str(i) for i in player_df.columns.tolist()])
+# print('cols are ', cols)
+# for i, row in player_df.iterrows():
+#     cursor.execute("INSERT IGNORE INTO players ( " + cols + ") VALUES (" + "%s," * (len(row) - 1) + "%s)", tuple(row))
