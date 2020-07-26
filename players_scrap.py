@@ -1,3 +1,5 @@
+from gevent import monkey as curious_george
+curious_george.patch_all(thread=False, select=False)
 import argparse
 import pandas as pd
 from tqdm import tqdm
@@ -23,25 +25,7 @@ parser.add_argument('-last',
                     help='choose last year of data to scrap')
 args = parser.parse_args()
 
-
-# def add_player_and_stats(row_player, global_list):
-#     name_player = row_player.find('a')['href']
-#     link_player = main_link + name_player
-#     player_page = read_link(link_player)
-#     player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text
-#     global_list.append(player_name)
-#     print('player name is ', player_name)
-#     player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
-#     player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
-#     total_games = player_stats_p1[1].text
-#     total_points = player_stats_p1[3].text
-#     total_rebounds = player_stats_p1[5].text
-#     total_assists = player_stats_p1[7].text
-#     global_list.append(total_games)
-#     global_list.append(total_points)
-#     global_list.append(total_rebounds)
-#     global_list.append(total_assists)
-
+cur = connection.cursor()
 
 main_link = 'https://www.basketball-reference.com/'
 
@@ -62,7 +46,7 @@ range_alphabet = letters[letters.find(FIRST_LETTER): letters.find(LAST_LETTER) +
 # Scrap all players whose last name starts with a letter between FIRST_LETTER and LAST_LETTER
 player_list = []
 for char in range_alphabet:
-    print('Scraping all players whose last name starts with ', char, '...')
+    logger.info(f'Scraping all players whose last name starts with {char} ...')
     link_players_alphabet = main_link + 'players/' + char
     alphabet_letter = read_link(link_players_alphabet)
     draft_table = alphabet_letter.find(class_="overthrow table_container")
@@ -76,14 +60,40 @@ for char in range_alphabet:
         name_player = player.find('a')['href']
         link_player = main_link + name_player
         player_page = read_link(link_player)
-        player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text
-        print('player name is ', player_name)
+        player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text[1:-1]
+        # print('player name is ', player_name)
         player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
         player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
-        total_games = player_stats_p1[1].text
-        total_points = player_stats_p1[3].text
-        total_rebounds = player_stats_p1[5].text
-        total_assists = player_stats_p1[7].text
+        try:
+            total_games = float(player_stats_p1[1].text)
+        except:
+            pass
+        try:
+            total_points = float(player_stats_p1[3].text)
+        except:
+            pass
+        try:
+            total_rebounds = float(player_stats_p1[5].text)
+        except:
+            pass
+        try:
+            total_assists = float(player_stats_p1[7].text)
+        except:
+            pass
+
+        cur.execute("INSERT INTO players ("
+                       "name_player, number_of_games_career, total_points_career, "
+                       "total_rebounds_career, total_assists_career) "
+                       "VALUES (%(name)s, %(nb_games)s, %(nb_points)s, %(nb_rebounds)s, %(nb_assists)s)",
+                    {'name': player_name,
+                        'nb_games': total_games,
+                        'nb_points': total_points,
+                        'nb_rebounds': total_rebounds,
+                        'nb_assists': total_assists})
+        connection.commit()
+
+        cur.execute('select last_insert_id()')
+        id_player = cur.fetchone()['last_insert_id()']
 
         arr_per_game = player_page.find('div', attrs={'class': "overthrow table_container", 'id': 'div_per_game'})
         body_per_game = arr_per_game.find('tbody').find_all('tr')
@@ -96,51 +106,68 @@ for char in range_alphabet:
                     name_team = team.find('a').text
                 except:
                     name_team = team.text
-                # print(name_team)
+                cur.execute('SELECT team_name FROM teams WHERE team_name = %(teams)s', {'teams': name_team})
+                team_exists = cur.fetchone()
+                if team_exists is None:
+                    cur.execute("INSERT INTO teams (team_name) VALUES (%(teams)s)", {'teams': name_team})
+                    connection.commit()
+
+                cur.execute('SELECT id_team FROM teams WHERE team_name = %(teams)s', {'teams': name_team})
+                id_team = cur.fetchone()['id_team']
+
+                cur.execute("INSERT INTO teams_to_players (id_team, id_player, year) "
+                            "VALUES (%(id_team_fk)s, %(id_player_fk)s, %(year_play)s)",
+                            {'id_team_fk': id_team,
+                             'id_player_fk': id_player,
+                             'year_play': year})
+                print('insertion en cours du dernier id team:', id_team)
+                print('insertion en cours du dernier id player:', id_player)
+                print('year:', year)
+
+                connection.commit()
+
             except:
                 pass
-            player_list.append(player_name)
-            player_list.append(total_games)
-            player_list.append(total_points)
-            player_list.append(total_rebounds)
-            player_list.append(total_assists)
-            player_list.append(year)
-            player_list.append(name_team)
+            # player_list.append(player_name)
+            # player_list.append(total_games)
+            # player_list.append(total_points)
+            # player_list.append(total_rebounds)
+            # player_list.append(total_assists)
+            # player_list.append(year)
+            # player_list.append(name_team)
 
 # Turning the list into list of lists
-updated_player_list = [player_list[x:x + NUMBER_SCRAPED_COLUMNS]
-                       for x in range(0, len(player_list), NUMBER_SCRAPED_COLUMNS)]
-
-# Storing the data in dataframe and exporting it to database
-player_df = pd.DataFrame(updated_player_list, columns=['name_player',
-                                                       'number_of_games_career',
-                                                       'total_points_career',
-                                                       'total_rebounds_career',
-                                                       'total_assists_career',
-                                                       'year',
-                                                       'team_name'])
+# updated_player_list = [player_list[x:x + NUMBER_SCRAPED_COLUMNS]
+#                        for x in range(0, len(player_list), NUMBER_SCRAPED_COLUMNS)]
+#
+# # Storing the data in dataframe and exporting it to database
+# player_df = pd.DataFrame(updated_player_list, columns=['name_player',
+#                                                        'number_of_games_career',
+#                                                        'total_points_career',
+#                                                        'total_rebounds_career',
+#                                                        'total_assists_career',
+#                                                        'year',
+#                                                        'team_name'])
 
 #  Filling tables line by line
-cursor = connection.cursor()
+# cur = connection.cur()
+#
+# cols = ", ".join([str(i) for i in player_df.columns.tolist()])
+# print('cols are ', cols)
+# for i, row in player_df.iterrows():
+#     cur.execute("INSERT IGNORE INTO players ( " + cols + ") VALUES (" + "%s," * (len(row) - 1) + "%s)", tuple(row))
 
-cols = ", ".join([str(i) for i in player_df.columns.tolist()])
-for i, row in player_df.iterrows():
-    cursor.execute("INSERT IGNORE INTO players "
-                   "(name_player, number_of_games_career, total_points_career, total_rebounds_career,"
-                   "total_assists_career) VALUES (%s, %s, %s, %s, %s)", tuple(row)[:5])
-    cursor.execute("INSERT IGNORE INTO teams (team_name) VALUES (%s)", tuple(row)[6])
-    cursor.execute("INSERT IGNORE INTO teams_to_players (year) VALUES (%s)", tuple(row)[5])
 
 # Deleting duplicates
-# cursor.execute("DROP TABLE IF EXISTS players_no_duplicates")
-# cursor.execute("CREATE TABLE players_no_duplicates SELECT DISTINCT name_player,"
+# cur.execute("DROP TABLE IF EXISTS players_no_duplicates")
+# cur.execute("CREATE TABLE players_no_duplicates SELECT DISTINCT name_player,"
 #                "number_of_games_career,"
 #                "total_points_career,"
 #                "total_rebounds_career,"
 #                "total_assists_career "
 #                "FROM players")
-# cursor.execute("DROP TABLE players")
-# cursor.execute("ALTER TABLE players_no_duplicates RENAME TO players")
+# cur.execute("DROP TABLE players")
+# cur.execute("ALTER TABLE players_no_duplicates RENAME TO players")
 #
 # connection.commit()
 
@@ -150,60 +177,3 @@ for i, row in player_df.iterrows():
 #                                db="basketball"))
 # player_df.to_sql('players', con=engine, if_exists='append', chunksize=1000, index=False)
 
-
-
-# Scrap all players whose last name starts with a letter between FIRST_LETTER and LAST_LETTER
-# player_list = []
-# for char in range_alphabet:
-#     print('Scraping all players whose last name starts with ', char, '...')
-#     link_players_alphabet = main_link + 'players/' + char
-#     alphabet_letter = read_link(link_players_alphabet)
-#     draft_table = alphabet_letter.find(class_="overthrow table_container")
-#     try:
-#         body = draft_table.find("tbody").find_all("th")
-#     except AttributeError:
-#         print('Link not valid')
-#         continue
-#     for player in tqdm(body):
-#         # add_player_and_stats(player, player_list)
-#         name_player = player.find('a')['href']
-#         link_player = main_link + name_player
-#         player_page = read_link(link_player)
-#         player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text
-#         player_list.append(player_name)
-#         print('player name is ', player_name)
-#         player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
-#         player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
-#         total_games = player_stats_p1[1].text
-#         total_points = player_stats_p1[3].text
-#         total_rebounds = player_stats_p1[5].text
-#         total_assists = player_stats_p1[7].text
-#
-#         arr_per_game = player_page.find('div', attrs={'class': "overthrow table_container", 'id': 'div_per_game'})
-#         body_per_game = arr_per_game.find('tbody').find_all('tr')
-#         for row in body_per_game:
-#             try:
-#                 year = row.find('a').text[:-3]
-#                 # print('year is ', year)
-#                 team = row.find('td', attrs={'data-stat': 'team_id'})
-#                 try:
-#                     name_team = team.find('a').text
-#                 except:
-#                     name_team = team.text
-#             except:
-#                 pass
-#             player_list.append(year)
-#             player_list.append(name_team)
-#             player_list.append(total_games)
-#             player_list.append(total_points)
-#             player_list.append(total_rebounds)
-#             player_list.append(total_assists)
-
-
-#  Filling tables line by line
-# cursor = connection.cursor()
-#
-# cols = ", ".join([str(i) for i in player_df.columns.tolist()])
-# print('cols are ', cols)
-# for i, row in player_df.iterrows():
-#     cursor.execute("INSERT IGNORE INTO players ( " + cols + ") VALUES (" + "%s," * (len(row) - 1) + "%s)", tuple(row))
