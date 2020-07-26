@@ -28,7 +28,7 @@ I suggest you enter the following command to scrap only players whose last name 
 <nano>pip install nba_api</nano>
 
 ### Tables
-<p align="center"><img src="image_tables.pdf"></p>
+<p align="center"><img src="erd.jpg"></p>
 ![alt_text](https://github.com/nico239677/web_scraping_project_ITC/blob/master/erd.jpg?raw=true)
 
 ### Authors & acknowledgement
