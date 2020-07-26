@@ -12,10 +12,13 @@ based on his performances and assess how likely he is to become one of the most 
 <p>This code makes it possible to scrap data about players whose last name is between start_letter ('a' by default)
 and end_letter ('z' by default)</p>
 <p>This command automatically adds in the <strong>teams</strong> table the list of teams (one row = one team)</p>
-<p>This command also creates the intermediary table <strong>teams_to_players</strong>
+<p>This command also creates the intermediary table <strong>teams_to_plapy yers</strong>
 that gives for each player his previous NBA teams and the corresponding year</p>
-<p><strong>NBA API:</strong>strong>: when you scrap a player, our API puts in a separate table 
+<p><strong>NBA API:</strong>: when you scrap a player, our API puts in a separate table 
 the drafts information of this player in a separate table</p>
+<h3>WARNING: in order to quickly test the project,
+I suggest you enter the following command to scrap only players whose last name starts with a Z:
+<nano>python players_scrap.py --start z --end z</nano></h3>
 
 ### Installation
 <p>Run following command:</p>
