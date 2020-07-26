@@ -21,17 +21,19 @@ with connection.cursor() as cur:
     cur.execute('use basketball_ref_scrap4')
     # cur.execute('\W')
 
-    # cur.execute("DROP TABLE IF EXISTS teams")
-    # cur.execute("DROP TABLE IF EXISTS players")
-    # cur.execute("DROP TABLE IF EXISTS drafts")
-    # cur.execute("DROP TABLE IF EXISTS teams_to_players")
+    cur.execute("DROP TABLE IF EXISTS teams_to_players")
+    cur.execute("DROP TABLE IF EXISTS drafts_api")
+    cur.execute("DROP TABLE IF EXISTS teams")
+    cur.execute("DROP TABLE IF EXISTS players")
 
     # cur.execute('DELETE FROM teams_to_players')
+    # cur.execute('DELETE FROM drafts_api')
     # cur.execute('DELETE FROM teams')
     # cur.execute('DELETE FROM players')
-    #
-    # cur.execute('ALTER TABLE teams AUTO_INCREMENT = 1')
+
     # cur.execute('ALTER TABLE teams_to_players AUTO_INCREMENT = 1')
+    # cur.execute('ALTER TABLE drafts_api AUTO_INCREMENT = 1')
+    # cur.execute('ALTER TABLE teams AUTO_INCREMENT = 1')
     # cur.execute('ALTER TABLE players AUTO_INCREMENT = 1')
 
 
@@ -58,7 +60,7 @@ with connection.cursor() as cur:
 
     # Create table teams_to_players
     logger.info("\nCreating table teams_to_players if it does not already exists...\n")
-    cur.execute("CREATE TABLE IF NOT EXISTS teams_to_players2 ("
+    cur.execute("CREATE TABLE IF NOT EXISTS teams_to_players ("
                 "id_table_inter INT NOT NULL AUTO_INCREMENT,"
                 "id_team INT NOT NULL,"
                 "id_player INT NOT NULL,"
@@ -74,9 +76,9 @@ with connection.cursor() as cur:
                 "id INT NOT NULL AUTO_INCREMENT,"
                 "id_player INT NOT NULL,"
                 "PLAYER_NAME VARCHAR(30),"
-                "POSITION VARCHAR(5),"
+                "POSITION VARCHAR(10),"
                 "HEIGHT_WO_SHOES FLOAT,"
-                "WEIGHT FLOAT,"
+                "WEIGHT VARCHAR(10),"
                 "WINGSPAN FLOAT,"
                 "PRIMARY KEY (id),"
                 "FOREIGN KEY(id_player) REFERENCES players(id_player)"
