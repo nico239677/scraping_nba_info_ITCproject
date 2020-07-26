@@ -5,6 +5,7 @@ import pandas as pd
 from tqdm import tqdm
 import string
 from functions import *
+from api_nba import get_info_draft_api
 
 NUMBER_SCRAPED_COLUMNS = 7
 
@@ -61,7 +62,15 @@ for char in range_alphabet:
         link_player = main_link + name_player
         player_page = read_link(link_player)
         player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text[1:-1]
-        # print('player name is ', player_name)
+        # print(player_name)
+        try:
+            assert('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
+                                  .find_all('p')[8]]))
+            data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[8]
+            year_draft = data_year_draft.find_all('a')[1].text[:4]
+        except:
+            year_draft = 0
+        # print('year_draft: ', year_draft)
         player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
         player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
         try:
@@ -80,13 +89,13 @@ for char in range_alphabet:
             total_assists = float(player_stats_p1[7].text)
         except:
             pass
-
         cur.execute("INSERT INTO players ("
-                       "name_player, number_of_games_career, total_points_career, "
+                       "name_player, year_draft, number_of_games_career, total_points_career, "
                        "total_rebounds_career, total_assists_career) "
-                       "VALUES (%(name)s, %(nb_games)s, %(nb_points)s, %(nb_rebounds)s, %(nb_assists)s)",
+                       "VALUES (%(name)s, %(year_d)s, %(nb_games)s, %(nb_points)s, %(nb_rebounds)s, %(nb_assists)s)",
                     {'name': player_name,
                         'nb_games': total_games,
+                        'year_d': year_draft,
                         'nb_points': total_points,
                         'nb_rebounds': total_rebounds,
                         'nb_assists': total_assists})
@@ -120,21 +129,14 @@ for char in range_alphabet:
                             {'id_team_fk': id_team,
                              'id_player_fk': id_player,
                              'year_play': year})
-                print('insertion en cours du dernier id team:', id_team)
-                print('insertion en cours du dernier id player:', id_player)
-                print('year:', year)
 
                 connection.commit()
 
             except:
                 pass
-            # player_list.append(player_name)
-            # player_list.append(total_games)
-            # player_list.append(total_points)
-            # player_list.append(total_rebounds)
-            # player_list.append(total_assists)
-            # player_list.append(year)
-            # player_list.append(name_team)
+        get_info_draft_api(player_name, year_draft)
+        year_draft
+        player_name
 
 # Turning the list into list of lists
 # updated_player_list = [player_list[x:x + NUMBER_SCRAPED_COLUMNS]
@@ -145,9 +147,8 @@ for char in range_alphabet:
 #                                                        'number_of_games_career',
 #                                                        'total_points_career',
 #                                                        'total_rebounds_career',
-#                                                        'total_assists_career',
-#                                                        'year',
-#                                                        'team_name'])
+#                                                        'total_assists_career'
+#                                                        ])
 
 #  Filling tables line by line
 # cur = connection.cur()

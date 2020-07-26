@@ -1,0 +1,15 @@
+,0
+0,"   SEASON  PLAYER_ID  ... ON_MOVE_FIFTEEN ON_MOVE_COLLEGE
+0    2018    1628959  ...           27-34            None
+1    2018    1628960  ...            None            None
+2    2018    1628961  ...           15-30            None
+3    2018    1628962  ...            None            None
+4    2018    1628964  ...            None            None
+..    ...        ...  ...             ...             ...
+64   2018    1629023  ...           20-32            None
+65   2018    1629024  ...           18-29            None
+66   2018    1629025  ...           16-32            None
+67   2018    1629026  ...           19-29            None
+68   2018    1629027  ...            None            None
+
+[69 rows x 47 columns]"

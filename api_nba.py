@@ -1,40 +1,17 @@
-from nba_api.stats.endpoints import playergamelog
-gamelog_bron = playergamelog.PlayerGameLog(player_id='2544', season = '2018')
-df_bron_games_2018 = gamelog_bron.get_data_frames()
-print('1sr is\n', df_bron_games_2018)
+from nba_api.stats.endpoints import draftcombinestats
 
+columns = ['PLAYER_NAME', 'POSITION', 'HEIGHT_WO_SHOES', 'WEIGHT', 'WINGSPAN']
 
-from nba_api.stats.library.parameters import SeasonAll
+def get_info_draft_api(player, year):
+    """Get all draft infos of player from NBA API,
+    using the method draftcombinestats"""
+    season = str(year) + '-' + str(year+1)[2:]
+    print(season)
+    draft_combine_stats_2018 = draftcombinestats.DraftCombineStats(league_id='00', season_all_time=season)
+    df_drafts_nba_2018 = draft_combine_stats_2018.get_data_frames()[0]
 
-gamelog_bron_all = playergamelog.PlayerGameLog(player_id='2544', season = SeasonAll.all)
+    # Choosing the columns of the table that we will keep
+    red_df = df_drafts_nba_2018[columns]
+    print(red_df[red_df['PLAYER_NAME'] == player])
 
-df_bron_games_all = gamelog_bron_all.get_data_frames()
-print('All games Lebron are \n', df_bron_games_all)
-
-# import requests
-#
-# resp = requests.get('https://stats.nba.com/stats/teamyearbyyearstats?LeagueID=00&PerMode=Totals&SeasonType=Regular+Season&TeamID=1610612739')
-#
-# data = resp.json()
-# for row in data:
-#     print(data)
-#
-#
-# series = data['SeasonSeries']
-# series
-
-# parameters2 = {'GameDate': '02/14/2015', 'LeagueID': '00', 'DayOffset': 0}
-
-# parameters_league_leader = {"LeagueID": 00, "PerMode": 'Totals', 'StatCategory': 1, 'Season': '2018-19', 'SeasonType': 'Playoffs', 'Scope':'RS'}
-# response = requests.get('https://stats.nba.com/stats/leagueleaders', params=parameters_league_leader)
-
-# parameters_yby = {"LeagueID": 00, "PerMode": 'Totals', 'SeasonType': 'Playoffs', 'TeamId': '1610612765'}
-# response = requests.get('https://stats.nba.com/stats/teamyearbyyearstats', params=parameters_yby)
-# print(response.status_code)
-#
-# data = response.json()
-# print(type(data))
-# for element in data:
-#     print(element)
-# # for row in response.content:
-#     print(row)
+get_info_draft_api('Rawle Alkins', 2018)
