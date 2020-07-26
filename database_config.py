@@ -17,8 +17,8 @@ logger = setup_logger('first_logger', 'database_management.log', formatter)
 with connection.cursor() as cur:
     # Create database
     logger.info("\nCreating database basketball_ref if it does not already exists\n")
-    cur.execute('CREATE DATABASE IF NOT EXISTS basketball_ref_scrap3')
-    cur.execute('use basketball_ref_scrap3')
+    cur.execute('CREATE DATABASE IF NOT EXISTS basketball_ref_scrap4')
+    cur.execute('use basketball_ref_scrap4')
     # cur.execute('\W')
 
     # cur.execute("DROP TABLE IF EXISTS teams")
@@ -69,17 +69,20 @@ with connection.cursor() as cur:
                 ")")
 
     # Create table drafts (FROM NBA API)
-    logger.info("\nCreating table drafts if it does not already exists...\n")
-    cur.execute("CREATE TABLE IF NOT EXISTS drafts ("
+    logger.info("\nCreating table drafts from API if it does not already exists...\n")
+    cur.execute("CREATE TABLE IF NOT EXISTS drafts_api ("
                 "id INT NOT NULL AUTO_INCREMENT,"
+                "id_player INT NOT NULL,"
                 "PLAYER_NAME VARCHAR(30),"
                 "POSITION VARCHAR(5),"
                 "HEIGHT_WO_SHOES FLOAT,"
                 "WEIGHT FLOAT,"
                 "WINGSPAN FLOAT,"
                 "PRIMARY KEY (id),"
-                "FOREIGN KEY(")
+                "FOREIGN KEY(id_player) REFERENCES players(id_player)"
+                ")")
 
+    # OLD DRAFT TABLE
     # logger.info("\nCreating table drafts if it does not already exists...\n")
     # cur.execute("CREATE TABLE IF NOT EXISTS drafts ("
     #             "id INT NOT NULL AUTO_INCREMENT,"

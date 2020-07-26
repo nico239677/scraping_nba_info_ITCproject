@@ -20,6 +20,7 @@ the drafts information of this player in a separate table</p>
 ### Installation
 <p>Run following command:</p>
 <nano>pip install -r requirements.txt</nano>
+<p></p>
 <p>To use the API:</p>
 <nano>pip install nba_api</nano>
 

@@ -134,9 +134,24 @@ for char in range_alphabet:
 
             except:
                 pass
-        get_info_draft_api(player_name, year_draft)
-        year_draft
-        player_name
+        print(player_name, year_draft)
+        try:
+            draft_data = tuple(get_info_draft_api(player_name, int(year_draft)))
+            print(draft_data)
+            cur.execute("INSERT INTO teams_to_players ("
+                        "id_player,"
+                        "PLAYER_NAME,"
+                        "POSITION,"
+                        "HEIGHT_WO_SHOES,"
+                        "WEIGHT,"
+                        "WINGSPAN) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)", draft_data)
+            connection.commit()
+        except:
+            pass
+
+
+ # cur.execute("INSERT IGNORE INTO players ( " + cols + ") VALUES (" + "%s," * (len(row) - 1) + "%s)", tuple(row))
 
 # Turning the list into list of lists
 # updated_player_list = [player_list[x:x + NUMBER_SCRAPED_COLUMNS]
