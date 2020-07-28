@@ -5,7 +5,7 @@ import pymysql.cursors
 import logging
 
 
-connection = pymysql.connect(host='192.168.1.24',
+connection = pymysql.connect(host='3.101.18.13',
                              user='root',
                              password='pwdmysql',
                              charset='utf8mb4',
