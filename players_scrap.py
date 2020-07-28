@@ -1,5 +1,5 @@
-#from gevent import monkey as curious_george
-#curious_george.patch_all(thread=False, select=False)
+from gevent import monkey as curious_george
+curious_george.patch_all(thread=False, select=False)
 from parser_file import *
 import pandas as pd
 from tqdm import tqdm

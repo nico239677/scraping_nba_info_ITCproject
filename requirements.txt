@@ -2,3 +2,6 @@ requests==2.22.0
 bs4==0.0.1
 pandas==1.0.1
 tqdm==4.42.1
+nba_api==1.1.8
+gevent==1.4.0
+pymysql==0.9.3
