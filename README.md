@@ -3,7 +3,7 @@
 
 <p>We scrap data about basketball <strong>players</strong>, <strong>team constitution over the years and by team </strong>
  <strong> and drafts by year</strong>.
-<p>In the long run, this project could make it possible to apply data scienceto predict the value of a player
+<p>In the long run, this project could make it possible to apply data science to predict the value of a player
 based on his performances and assess how likely he is to become one of the most valuable players.</p>
 
 ### Usage
