@@ -1,5 +1,6 @@
 requests==2.22.0
 bs4==0.0.1
+lxml==4.5.0
 pandas==1.0.1
 tqdm==4.42.1
 nba_api==1.1.8
