@@ -15,4 +15,4 @@ def get_info_draft_api(player, year):
     # print(draft_data)
     return draft_data.iloc[0, :]
 
-print(get_info_draft_api('Cole Aldrich', 2010))
+# print(get_info_draft_api('Cole Aldrich', 2010))
