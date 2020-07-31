@@ -111,7 +111,7 @@ for char in range_alphabet:
                 connection.commit()
 
             except Exception as err:
-                logger.WARNING(err)
+                # logger.WARNING(err)
                 pass
         # print(player_name, year_draft)
         try:
@@ -137,7 +137,7 @@ for char in range_alphabet:
                          'wing': str(draft_data[5])})
             connection.commit()
         except Exception as err:
-            logger.WARNING(err)
+            # logger.WARNING(err)
             pass
 
 
