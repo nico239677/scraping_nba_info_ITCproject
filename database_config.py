@@ -14,6 +14,8 @@ connection = pymysql.connect(host='localhost',
 
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 logger = setup_logger('first_logger', 'database_management.log', formatter)
+warning_logger = setup_logger('warning_logger', 'database_management.log', formatter, level=logging.WARNING)
+
 
 with connection.cursor() as cur:
     # Create database

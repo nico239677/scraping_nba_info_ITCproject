@@ -13,6 +13,8 @@ with open('database_config.py', "rb") as source_file:
     code = compile(source_file.read(), 'database_config.py', "exec")
 exec(code)
 
+
+
 cur = connection.cursor()
 
 # Scrap all players whose last name starts with a letter between FIRST_LETTER and LAST_LETTER
@@ -111,7 +113,7 @@ for char in range_alphabet:
                 connection.commit()
 
             except Exception as err:
-                # logger.WARNING(err)
+                warning_logger.info(err)
                 pass
         # print(player_name, year_draft)
         try:
@@ -137,7 +139,7 @@ for char in range_alphabet:
                          'wing': str(draft_data[5])})
             connection.commit()
         except Exception as err:
-            # logger.WARNING(err)
+            warning_logger.info(err)
             pass
 
 
