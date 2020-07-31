@@ -4,6 +4,7 @@ from functions import setup_logger
 import pymysql.cursors
 import logging
 
+print('Starting to scrap...')
 
 connection = pymysql.connect(host='localhost',
                              user='root',
