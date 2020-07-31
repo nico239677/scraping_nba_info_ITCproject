@@ -22,10 +22,10 @@ with connection.cursor() as cur:
     cur.execute('use basketball_ref_scrap5')
     # cur.execute('\W')
 
-    # cur.execute("DROP TABLE IF EXISTS teams_to_players")
-    # cur.execute("DROP TABLE IF EXISTS drafts_api")
-    # cur.execute("DROP TABLE IF EXISTS teams")
-    # cur.execute("DROP TABLE IF EXISTS players")
+    cur.execute("DROP TABLE IF EXISTS teams_to_players")
+    cur.execute("DROP TABLE IF EXISTS drafts_api")
+    cur.execute("DROP TABLE IF EXISTS teams")
+    cur.execute("DROP TABLE IF EXISTS players")
 
     # cur.execute('DELETE FROM teams_to_players')
     # cur.execute('DELETE FROM drafts_api')
@@ -73,7 +73,7 @@ with connection.cursor() as cur:
     logger.info("\nCreating table drafts from API if it does not already exists...\n")
     cur.execute("CREATE TABLE IF NOT EXISTS drafts_api ("
                 "id_player INT NOT NULL,"
-                "PLAYER_NAME VARCHAR(30),"
+                "PLAYER_NAME VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,"
                 "POSITION VARCHAR(10),"
                 "HEIGHT_WO_SHOES FLOAT,"
                 "WEIGHT VARCHAR(10),"

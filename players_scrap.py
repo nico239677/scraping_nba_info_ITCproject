@@ -142,26 +142,7 @@ for char in range_alphabet:
 # ----------------------------------------------------------------------------
 
 
-            # print(draft_data[0], 'for type', type(draft_data.iloc[0]))
-            # print(draft_data[1], 'for type', type(draft_data.iloc[1]))
-            # print(draft_data[2], 'for type', type(draft_data.iloc[2]))
-            # print(draft_data[3], 'for type', type(draft_data.iloc[3]))
-            # print(draft_data[4], 'for type', type(draft_data.iloc[4]))
-            # cur.execute("INSERT INTO teams_to_players ("
-            #             "id_player,"
-            #             "PLAYER_NAME,"
-            #             "POSITION,"
-            #             "HEIGHT_WO_SHOES,"
-            #             "WEIGHT,"
-            #             "WINGSPAN) "
-            #             "VALUES "
-            #             "(%(id_play)s, %(name)s, %(pos)s, %(height)s, %(weight)s, %()wingspans)",
-            #             {'id_play': id_player,
-            #              'name': draft_data.iloc[0],
-            #              'pos': draft_data.iloc[1],
-            #              'height': draft_data.iloc[2],
-            #              'weight': draft_data.iloc[3],
-            #              'wingspan': draft_data.iloc[4]})
+
 
  # cur.execute("INSERT IGNORE INTO players ( " + cols + ") VALUES (" + "%s," * (len(row) - 1) + "%s)", tuple(row))
 
