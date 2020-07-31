@@ -14,7 +14,7 @@ def read_link(link):
         # print('link: \n', link)
     except requests.exceptions.ConnectionError:
         print('URL not valid')
-        sys.exit()
+        pass
     soup = BeautifulSoup(r.content, 'lxml')
     return soup
 

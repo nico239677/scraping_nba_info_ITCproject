@@ -22,10 +22,10 @@ with connection.cursor() as cur:
     cur.execute('use basketball_ref_scrap5')
     # cur.execute('\W')
 
-    cur.execute("DROP TABLE IF EXISTS teams_to_players")
-    cur.execute("DROP TABLE IF EXISTS drafts_api")
-    cur.execute("DROP TABLE IF EXISTS teams")
-    cur.execute("DROP TABLE IF EXISTS players")
+    # cur.execute("DROP TABLE IF EXISTS teams_to_players")
+    # cur.execute("DROP TABLE IF EXISTS drafts_api")
+    # cur.execute("DROP TABLE IF EXISTS teams")
+    # cur.execute("DROP TABLE IF EXISTS players")
 
     # cur.execute('DELETE FROM teams_to_players')
     # cur.execute('DELETE FROM drafts_api')
@@ -43,7 +43,7 @@ with connection.cursor() as cur:
     cur.execute("CREATE TABLE IF NOT EXISTS players ("
                 "id_player INT NOT NULL AUTO_INCREMENT,"
                 "name_player VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,"
-                "year_draft INT,"
+                "year_draft DATETIME,"
                 "number_of_games_career FLOAT,"
                 "total_points_career FLOAT,"
                 "total_rebounds_career FLOAT,"
@@ -64,7 +64,7 @@ with connection.cursor() as cur:
     cur.execute("CREATE TABLE IF NOT EXISTS teams_to_players ("
                 "id_team INT NOT NULL,"
                 "id_player INT NOT NULL,"
-                "year INT,"
+                "year DATETIME,"
                 "FOREIGN KEY(id_team) REFERENCES teams(id_team),"
                 "FOREIGN KEY(id_player) REFERENCES players(id_player)"
                 ")")
