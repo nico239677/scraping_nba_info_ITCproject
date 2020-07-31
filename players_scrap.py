@@ -3,7 +3,6 @@ curious_george.patch_all(thread=False, select=False)
 from parser_file import *
 import pandas as pd
 from tqdm import tqdm
-from datetime import datetime
 from functions import *
 from variables import *
 from api_nba import get_info_draft_api
@@ -12,8 +11,6 @@ from api_nba import get_info_draft_api
 with open('database_config.py', "rb") as source_file:
     code = compile(source_file.read(), 'database_config.py', "exec")
 exec(code)
-
-
 
 cur = connection.cursor()
 
