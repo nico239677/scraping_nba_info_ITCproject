@@ -38,12 +38,25 @@ for char in range_alphabet:
         # print('player name:', player_name)
         try:
             assert('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
-                                  .find_all('p')[8]]))
-            data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[8]
+                                  .find_all('p')[7]]))
+            data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[7]
             year_draft = data_year_draft.find_all('a')[1].text[:4]
         except:
-            year_draft = 1970
-        # print('year_draft:', year_draft)
+            try:
+                assert('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
+                                      .find_all('p')[8]]))
+                data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[8]
+                year_draft = data_year_draft.find_all('a')[1].text[:4]
+            except:
+                try:
+                    assert ('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
+                                           .find_all('p')[9]]))
+                    data_year_draft = \
+                    player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[9]
+                    year_draft = data_year_draft.find_all('a')[1].text[:4]
+                except:
+                    year_draft = 0
+        # print('player is ', player_name, 'year draft is ', year_draft)
         player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
         player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
         try:

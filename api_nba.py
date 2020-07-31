@@ -2,6 +2,7 @@ from nba_api.stats.endpoints import draftcombinestats
 
 columns = ['PLAYER_NAME', 'POSITION', 'HEIGHT_WO_SHOES', 'WEIGHT', 'WINGSPAN']
 
+
 def get_info_draft_api(player, year):
     """Get all draft infos of player from NBA API,
     using the method draftcombinestats"""
