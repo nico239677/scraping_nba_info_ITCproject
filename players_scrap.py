@@ -31,114 +31,112 @@ for char in range_alphabet:
         name_player = player.find('a')['href']
         link_player = main_link + name_player
         player_page = read_link(link_player)
+        player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text[1:-1]
+        # print('player name:', player_name)
         try:
-            player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text[1:-1]
-            # print('player name:', player_name)
-            try:
-                assert('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
-                                      .find_all('p')[8]]))
-                data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[8]
-                year_draft = data_year_draft.find_all('a')[1].text[:4]
-            except:
-                year_draft = 0
-            # print('year_draft:', year_draft)
-            player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
-            player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
-            try:
-                total_games = float(player_stats_p1[1].text)
-            except:
-                total_games = 0
-            try:
-                total_points = float(player_stats_p1[3].text)
-            except:
-                total_points = 0
-            try:
-                total_rebounds = float(player_stats_p1[5].text)
-            except:
-                total_rebounds = 0
-            try:
-                total_assists = float(player_stats_p1[7].text)
-            except:
-                total_assists = 0
+            assert('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
+                                  .find_all('p')[8]]))
+            data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[8]
+            year_draft = data_year_draft.find_all('a')[1].text[:4]
+        except:
+            year_draft = 0
+        # print('year_draft:', year_draft)
+        player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
+        player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
+        try:
+            total_games = float(player_stats_p1[1].text)
+        except:
+            total_games = 0
+        try:
+            total_points = float(player_stats_p1[3].text)
+        except:
+            total_points = 0
+        try:
+            total_rebounds = float(player_stats_p1[5].text)
+        except:
+            total_rebounds = 0
+        try:
+            total_assists = float(player_stats_p1[7].text)
+        except:
+            total_assists = 0
 
-            # Inserting into PLAYERS table
-            cur.execute("INSERT INTO players ("
-                           "name_player, year_draft, number_of_games_career, total_points_career, "
-                           "total_rebounds_career, total_assists_career) "
-                           "VALUES (%(name)s, %(year_d)s, %(nb_games)s, %(nb_points)s, %(nb_rebounds)s, %(nb_assists)s)",
-                        {'name': player_name,
-                            'nb_games': total_games,
-                            'year_d': year_draft,
-                            'nb_points': total_points,
-                            'nb_rebounds': total_rebounds,
-                            'nb_assists': total_assists})
-            connection.commit()
+        # Inserting into PLAYERS table
+        cur.execute("INSERT INTO players ("
+                       "name_player, year_draft, number_of_games_career, total_points_career, "
+                       "total_rebounds_career, total_assists_career) "
+                       "VALUES (%(name)s, %(year_d)s, %(nb_games)s, %(nb_points)s, %(nb_rebounds)s, %(nb_assists)s)",
+                    {'name': player_name,
+                        'nb_games': total_games,
+                        'year_d': year_draft,
+                        'nb_points': total_points,
+                        'nb_rebounds': total_rebounds,
+                        'nb_assists': total_assists})
+        connection.commit()
 
-            cur.execute('select last_insert_id()')
-            id_player = cur.fetchone()['last_insert_id()']
+        cur.execute('select last_insert_id()')
+        id_player = cur.fetchone()['last_insert_id()']
 
-            arr_per_game = player_page.find('div', attrs={'class': "overthrow table_container", 'id': 'div_per_game'})
-            body_per_game = arr_per_game.find('tbody').find_all('tr')
-            for row in body_per_game:
+        arr_per_game = player_page.find('div', attrs={'class': "overthrow table_container", 'id': 'div_per_game'})
+        body_per_game = arr_per_game.find('tbody').find_all('tr')
+        for row in body_per_game:
+            try:
+                year = row.find('a').text[:-3]
+                # print('year is ', year)
+                team = row.find('td', attrs={'data-stat': 'team_id'})
                 try:
-                    year = row.find('a').text[:-3]
-                    # print('year is ', year)
-                    team = row.find('td', attrs={'data-stat': 'team_id'})
-                    try:
-                        name_team = team.find('a').text
-                    except:
-                        name_team = team.text
-                    cur.execute('SELECT team_name FROM teams WHERE team_name = %(teams)s', {'teams': name_team})
-                    team_exists = cur.fetchone()
-                    if team_exists is None:
-                        # Inserting into TEAMS table only if team is not already in TEAMS table
-                        cur.execute("INSERT INTO teams (team_name) VALUES (%(teams)s)", {'teams': name_team})
-                        connection.commit()
-
-                    cur.execute('SELECT id_team FROM teams WHERE team_name = %(teams)s', {'teams': name_team})
-                    id_team = cur.fetchone()['id_team']
-                    # print('id team is ', id_team)
-                    # print('id player is ', id_player)
-                    # print('year is ', year)
-
-                    # Inserting into TEAMS_TO_PLAYERS table
-                    cur.execute("INSERT INTO teams_to_players (id_team, id_player, year) "
-                                "VALUES (%(id_team_fk)s, %(id_player_fk)s, %(year_play)s)",
-                                {'id_team_fk': id_team,
-                                 'id_player_fk': id_player,
-                                 'year_play': year})
-
+                    name_team = team.find('a').text
+                except:
+                    name_team = team.text
+                cur.execute('SELECT team_name FROM teams WHERE team_name = %(teams)s', {'teams': name_team})
+                team_exists = cur.fetchone()
+                if team_exists is None:
+                    # Inserting into TEAMS table only if team is not already in TEAMS table
+                    cur.execute("INSERT INTO teams (team_name) VALUES (%(teams)s)", {'teams': name_team})
                     connection.commit()
 
-                except:
-                    pass
-            # print(player_name, year_draft)
-            try:
-                # Inserting into DRAFTS table the values we got from the API
-                df_id_player = pd.Series(id_player)
+                cur.execute('SELECT id_team FROM teams WHERE team_name = %(teams)s', {'teams': name_team})
+                id_team = cur.fetchone()['id_team']
+                # print('id team is ', id_team)
                 # print('id player is ', id_player)
-                # print('df_id player is ', df_id_player)
-                draft_data = list(df_id_player.append(get_info_draft_api(player_name, int(year_draft))))
+                # print('year is ', year)
 
-                cur.execute("INSERT INTO drafts_api ("
-                            "id_player,"
-                            "PLAYER_NAME,"
-                            "POSITION,"
-                            "HEIGHT_WO_SHOES,"
-                            "WEIGHT,"
-                            "WINGSPAN) "
-                            "VALUES (%(id)s, %(name)s, %(pos)s, %(height)s, %(weight)s, %(wing)s)",
-                            {'id': str(draft_data[0]),
-                             'name': str(draft_data[1]),
-                             'pos': str(draft_data[2]),
-                             'height': str(draft_data[3]),
-                             'weight': str(draft_data[4]),
-                             'wing': str(draft_data[5])})
+                # Inserting into TEAMS_TO_PLAYERS table
+                cur.execute("INSERT INTO teams_to_players (id_team, id_player, year) "
+                            "VALUES (%(id_team_fk)s, %(id_player_fk)s, %(year_play)s)",
+                            {'id_team_fk': id_team,
+                             'id_player_fk': id_player,
+                             'year_play': year})
+
                 connection.commit()
+
             except:
                 pass
+        # print(player_name, year_draft)
+        try:
+            # Inserting into DRAFTS table the values we got from the API
+            df_id_player = pd.Series(id_player)
+            # print('id player is ', id_player)
+            # print('df_id player is ', df_id_player)
+            draft_data = list(df_id_player.append(get_info_draft_api(player_name, int(year_draft))))
+
+            cur.execute("INSERT INTO drafts_api ("
+                        "id_player,"
+                        "PLAYER_NAME,"
+                        "POSITION,"
+                        "HEIGHT_WO_SHOES,"
+                        "WEIGHT,"
+                        "WINGSPAN) "
+                        "VALUES (%(id)s, %(name)s, %(pos)s, %(height)s, %(weight)s, %(wing)s)",
+                        {'id': str(draft_data[0]),
+                         'name': str(draft_data[1]),
+                         'pos': str(draft_data[2]),
+                         'height': str(draft_data[3]),
+                         'weight': str(draft_data[4]),
+                         'wing': str(draft_data[5])})
+            connection.commit()
         except:
             pass
+
 
 
 # ----------------------------------------------------------------------------
