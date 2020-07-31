@@ -43,7 +43,7 @@ with connection.cursor() as cur:
     cur.execute("CREATE TABLE IF NOT EXISTS players ("
                 "id_player INT NOT NULL AUTO_INCREMENT,"
                 "name_player VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,"
-                "year_draft DATETIME,"
+                "year_draft YEAR,"
                 "number_of_games_career FLOAT,"
                 "total_points_career FLOAT,"
                 "total_rebounds_career FLOAT,"
