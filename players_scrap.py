@@ -40,7 +40,7 @@ for char in range_alphabet:
             data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[8]
             year_draft = data_year_draft.find_all('a')[1].text[:4]
         except:
-            year_draft = datetime(1970)
+            year_draft = datetime.strptime(1970, '%y')
         # print('year_draft:', year_draft)
         player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
         player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
