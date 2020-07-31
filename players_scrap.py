@@ -115,17 +115,18 @@ for char in range_alphabet:
         try:
             # Inserting into DRAFTS table the values we got from the API
             df_id_player = pd.Series(id_player)
+            print('id player is ', id_player)
+            print('df_id player is ', df_id_player)
             draft_data = tuple(df_id_player.append(get_info_draft_api(player_name, int(year_draft))))
-            draft_data = tuple(get_info_draft_api(player_name, int(year_draft)))
-            draft_data = get_info_draft_api(player_name, int(year_draft))
-            cur.execute("INSERT INTO teams_to_players ("
+            print('draft_data is ', tuple(draft_data))
+            cur.execute("INSERT INTO drafts_api ("
                         "id_player,"
                         "PLAYER_NAME,"
                         "POSITION,"
                         "HEIGHT_WO_SHOES,"
                         "WEIGHT,"
                         "WINGSPAN) "
-                        "VALUES (%s, %s, %s, %s, %s, %s)", draft_data)
+                        "VALUES (%s, %s, %s, %s, %s, %s)", tuple(draft_data))
             connection.commit()
         except:
             pass
