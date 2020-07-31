@@ -134,10 +134,11 @@ for char in range_alphabet:
                              'height': str(draft_data[3]),
                              'weight': str(draft_data[4]),
                              'wing': str(draft_data[5])})
-                # connection.commit()
+                connection.commit()
             except:
                 pass
-        pass
+        except:
+            pass
 
 
 # ----------------------------------------------------------------------------
