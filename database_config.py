@@ -22,7 +22,7 @@ with connection.cursor() as cur:
     # cur.execute('\W')
 
     # cur.execute("DROP TABLE IF EXISTS teams_to_players")
-    # cur.execute("DROP TABLE IF EXISTS drafts_api")
+    cur.execute("DROP TABLE IF EXISTS drafts_api")
     # cur.execute("DROP TABLE IF EXISTS teams")
     # cur.execute("DROP TABLE IF EXISTS players")
 
