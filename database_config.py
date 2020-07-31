@@ -5,7 +5,7 @@ import pymysql.cursors
 import logging
 
 
-connection = pymysql.connect(host='ec2-3-101-18-13.us-west-1.compute.amazonaws.com',
+connection = pymysql.connect(host='localhost',
                              user='root',
                              password='pwdmysql',
                              charset='utf8mb4',
