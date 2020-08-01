@@ -33,7 +33,7 @@ for char in range_alphabet:
         player_page = read_link(link_player)
         player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text[1:-1]
         # print('player is ', player_name)
-        year_draft = find_year_draft(player_page)
+        year_draft = int(find_year_draft(player_page))
         # print('player is ', player_name, 'year draft is ', year_draft)
         player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
         player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
@@ -74,7 +74,7 @@ for char in range_alphabet:
         body_per_game = arr_per_game.find('tbody').find_all('tr')
         for row in body_per_game:
             try:
-                year = row.find('a').text[:-3]
+                year = int(row.find('a').text[:-3])
                 # print('year is ', year)
                 team = row.find('td', attrs={'data-stat': 'team_id'})
                 try:
@@ -90,6 +90,8 @@ for char in range_alphabet:
 
                 cur.execute('SELECT id_team FROM teams WHERE team_name = %(teams)s', {'teams': name_team})
                 id_team = cur.fetchone()['id_team']
+                # print(id_team, id_player, year)
+                # print(type(id_team), type(id_player), type(year))
 
                 # Inserting into TEAMS_TO_PLAYERS table
                 cur.execute("INSERT INTO teams_to_players (id_team, id_player, year) "
