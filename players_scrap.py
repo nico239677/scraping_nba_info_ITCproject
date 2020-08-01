@@ -32,29 +32,6 @@ for char in range_alphabet:
         link_player = main_link + name_player
         player_page = read_link(link_player)
         player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text[1:-1]
-        # print('player name:', player_name)
-
-        # try:
-        #     assert('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
-        #                           .find_all('p')[7]]))
-        #     data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[7]
-        #     year_draft = data_year_draft.find_all('a')[1].text[:4]
-        # except:
-        #     try:
-        #         assert('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
-        #                               .find_all('p')[8]]))
-        #         data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[8]
-        #         year_draft = data_year_draft.find_all('a')[1].text[:4]
-        #     except:
-        #         try:
-        #             assert ('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
-        #                                    .find_all('p')[9]]))
-        #             data_year_draft = \
-        #             player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[9]
-        #             year_draft = data_year_draft.find_all('a')[1].text[:4]
-        #         except:
-        #             year_draft = 0
-
         year_draft = find_year_draft(player_page)
         # print('player is ', player_name, 'year draft is ', year_draft)
         player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
@@ -129,7 +106,7 @@ for char in range_alphabet:
         try:
             # Inserting into DRAFTS table the values we got from the API
             df_id_player = pd.Series(id_player)
-            draft_data = list(df_id_player.append(get_info_draft_api(player_name, int(year_draft))))
+            draft_data = list(df_id_player.append(get_info_draft_api(player_name, year_draft)))
             # print('draft is ', draft_data)
 
             cur.execute("INSERT INTO drafts_api ("
