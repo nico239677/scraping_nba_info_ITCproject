@@ -33,7 +33,7 @@ for char in range_alphabet:
         player_page = read_link(link_player)
         player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text[1:-1]
         year_draft = find_year_draft(player_page)
-        print('player is ', player_name, 'year draft is ', year_draft)
+        # print('player is ', player_name, 'year draft is ', year_draft)
         player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
         player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
         try:
@@ -105,10 +105,7 @@ for char in range_alphabet:
         # print(player_name, year_draft)
         try:
             # Inserting into DRAFTS table the values we got from the API
-            df_id_player = pd.Series(id_player)
-            draft_data = list(df_id_player.append(get_info_draft_api(player_name, year_draft)))
-            # print('draft is ', draft_data)
-
+            info_draft = get_info_draft_api(player_name, year_draft)
             cur.execute("INSERT INTO drafts_api ("
                         "id_player,"
                         "PLAYER_NAME,"
@@ -117,12 +114,12 @@ for char in range_alphabet:
                         "WEIGHT,"
                         "WINGSPAN) "
                         "VALUES (%(id)s, %(name)s, %(pos)s, %(height)s, %(weight)s, %(wing)s)",
-                        {'id': str(draft_data[0]),
-                         'name': str(draft_data[1]),
-                         'pos': str(draft_data[2]),
-                         'height': str(draft_data[3]),
-                         'weight': str(draft_data[4]),
-                         'wing': str(draft_data[5])})
+                        {'id': str(id_player),
+                         'name': str(info_draft[0]),
+                         'pos': str(info_draft[1]),
+                         'height': str(info_draft[2]),
+                         'weight': str(info_draft[3]),
+                         'wing': str(info_draft[4])})
             connection.commit()
         except Exception as err:
             warning_logger.info(err)
