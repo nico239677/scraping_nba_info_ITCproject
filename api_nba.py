@@ -6,6 +6,7 @@ columns = ['PLAYER_NAME', 'POSITION', 'HEIGHT_WO_SHOES', 'WEIGHT', 'WINGSPAN']
 def get_info_draft_api(player, year):
     """Get all draft infos of player from NBA API,
     using the method draftcombinestats"""
+    print('year is ', year)
     year = int(str(year).replace(',', '').split('.', 1)[0])
     season = str(year) + '-' + str(year+1)[2:]
     draft_combine_stats = draftcombinestats.DraftCombineStats(league_id='00', season_all_time=season)
