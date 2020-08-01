@@ -16,5 +16,5 @@ def get_info_draft_api(player, year):
     draft_data = red_df[red_df['PLAYER_NAME'] == player]
     return draft_data.iloc[0, :]
 
-print(get_info_draft_api('Cole Aldrich', '2010'))
+# print(get_info_draft_api('Cole Aldrich', '2010'))
 
