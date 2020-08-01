@@ -38,10 +38,13 @@ def find_year_draft(player_page):
     """Scraps draft year if exists"""
     i = 5
     while i < 10:
-        if 'draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
-                               .find_all('p')[i]]):
+        try:
+            assert 'draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
+                               .find_all('p')[i]])
             data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[i]
             year = data_year_draft.find_all('a')[1].text[:4]
             return year
-        i += 1
+        except:
+            i += 1
+    return 0
 
