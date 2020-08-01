@@ -24,15 +24,15 @@ with connection.cursor() as cur:
     cur.execute('use basketball_ref_scrap5')
     # cur.execute('\W')
 
-    cur.execute("DROP TABLE IF EXISTS teams_to_players")
-    cur.execute("DROP TABLE IF EXISTS drafts_api")
-    cur.execute("DROP TABLE IF EXISTS teams")
-    cur.execute("DROP TABLE IF EXISTS players")
+    # cur.execute("DROP TABLE IF EXISTS teams_to_players")
+    # cur.execute("DROP TABLE IF EXISTS drafts_api")
+    # cur.execute("DROP TABLE IF EXISTS teams")
+    # cur.execute("DROP TABLE IF EXISTS players")
 
-    # cur.execute('DELETE FROM teams_to_players')
-    # cur.execute('DELETE FROM drafts_api')
-    # cur.execute('DELETE FROM teams')
-    # cur.execute('DELETE FROM players')
+    cur.execute('DELETE FROM teams_to_players')
+    cur.execute('DELETE FROM drafts_api')
+    cur.execute('DELETE FROM teams')
+    cur.execute('DELETE FROM players')
 
     # cur.execute('ALTER TABLE teams_to_players AUTO_INCREMENT = 1')
     # cur.execute('ALTER TABLE drafts_api AUTO_INCREMENT = 1')
