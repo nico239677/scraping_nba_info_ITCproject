@@ -33,7 +33,7 @@ for char in range_alphabet:
         player_page = read_link(link_player)
         player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text[1:-1]
         year_draft = find_year_draft(player_page)
-        # print('player is ', player_name, 'year draft is ', year_draft)
+        print('player is ', player_name, 'year draft is ', year_draft)
         player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
         player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
         try:
