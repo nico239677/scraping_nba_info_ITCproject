@@ -13,7 +13,7 @@ def get_info_draft_api(player, year):
     # Choosing the columns of the table that we will keep
     red_df = df_drafts_nba[columns]
     draft_data = red_df[red_df['PLAYER_NAME'] == player]
-    # print(draft_data)
     return draft_data.iloc[0, :]
 
 # print(get_info_draft_api('Cole Aldrich', 2010))
+

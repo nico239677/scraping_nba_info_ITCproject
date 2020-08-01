@@ -33,26 +33,29 @@ for char in range_alphabet:
         player_page = read_link(link_player)
         player_name = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find('h1').text[1:-1]
         # print('player name:', player_name)
-        try:
-            assert('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
-                                  .find_all('p')[7]]))
-            data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[7]
-            year_draft = data_year_draft.find_all('a')[1].text[:4]
-        except:
-            try:
-                assert('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
-                                      .find_all('p')[8]]))
-                data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[8]
-                year_draft = data_year_draft.find_all('a')[1].text[:4]
-            except:
-                try:
-                    assert ('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
-                                           .find_all('p')[9]]))
-                    data_year_draft = \
-                    player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[9]
-                    year_draft = data_year_draft.find_all('a')[1].text[:4]
-                except:
-                    year_draft = 0
+
+        # try:
+        #     assert('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
+        #                           .find_all('p')[7]]))
+        #     data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[7]
+        #     year_draft = data_year_draft.find_all('a')[1].text[:4]
+        # except:
+        #     try:
+        #         assert('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
+        #                               .find_all('p')[8]]))
+        #         data_year_draft = player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[8]
+        #         year_draft = data_year_draft.find_all('a')[1].text[:4]
+        #     except:
+        #         try:
+        #             assert ('draft' in str([player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'})
+        #                                    .find_all('p')[9]]))
+        #             data_year_draft = \
+        #             player_page.find('div', attrs={'itemtype': 'https://schema.org/Person'}).find_all('p')[9]
+        #             year_draft = data_year_draft.find_all('a')[1].text[:4]
+        #         except:
+        #             year_draft = 0
+
+        year_draft = find_year_draft(player_page)
         # print('player is ', player_name, 'year draft is ', year_draft)
         player_stats = player_page.find('div', attrs={'class': 'stats_pullout'})
         player_stats_p1 = player_stats.find('div', attrs={'class': 'p1'}).find_all('p')
@@ -109,9 +112,6 @@ for char in range_alphabet:
 
                 cur.execute('SELECT id_team FROM teams WHERE team_name = %(teams)s', {'teams': name_team})
                 id_team = cur.fetchone()['id_team']
-                # print('id team is ', id_team)
-                # print('id player is ', id_player)
-                # print('year is ', year)
 
                 # Inserting into TEAMS_TO_PLAYERS table
                 cur.execute("INSERT INTO teams_to_players (id_team, id_player, year) "
@@ -129,9 +129,8 @@ for char in range_alphabet:
         try:
             # Inserting into DRAFTS table the values we got from the API
             df_id_player = pd.Series(id_player)
-            # print('id player is ', id_player)
-            # print('df_id player is ', df_id_player)
             draft_data = list(df_id_player.append(get_info_draft_api(player_name, int(year_draft))))
+            # print('draft is ', draft_data)
 
             cur.execute("INSERT INTO drafts_api ("
                         "id_player,"
